@@ -8,9 +8,9 @@ import { getCategories, getFilteredEvents } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Jelajah Acara & Loket Karcis",
+  title: "Jelajah Acara & Konser Seru",
   description:
-    "Daftar lengkap konser independen, lokakarya kreatif, diskusi teknologi, dan festival kuliner di berbagai kota.",
+    "Daftar lengkap konser independen, lokakarya kreatif, diskusi teknologi, dan festival kuliner di NewTix.",
 };
 
 export default async function EventsDirectoryPage({
@@ -73,12 +73,12 @@ export default async function EventsDirectoryPage({
       {/* Header */}
       <div className="border-b-2 border-ink pb-8 mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
         <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-vermilion block">
-            DIREKTORI PANGGUNG & LOKAKARYA
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+            KATALOG ACARA // NEWTIX
           </span>
           <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mt-1">
-            Cari karcis{" "}
-            <span className="font-serif italic font-normal text-vermilion">
+            Cari tiket{" "}
+            <span className="font-serif italic font-semibold text-denim">
               akhir pekanmu.
             </span>
           </h1>
@@ -106,7 +106,7 @@ export default async function EventsDirectoryPage({
               className="pl-10"
             />
           </div>
-          <Button type="submit">Cari Karcis</Button>
+          <Button type="submit">Cari Tiket</Button>
         </form>
       </div>
 
@@ -114,17 +114,17 @@ export default async function EventsDirectoryPage({
       <div className="space-y-4 mb-10">
         <div className="flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-ink-muted mr-2">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-vermilion" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-denim" />
             Kategori:
           </span>
 
           <Link
             href={buildFilterHref({ category: "", page: 1 })}
             className={cn(
-              "px-3.5 py-2 border-2 border-ink font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center",
+              "px-3.5 py-2 rounded-full border-2 border-ink font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center",
               !currentCategory
-                ? "bg-ink text-paper poster-shadow-sm"
-                : "bg-card text-ink hover:bg-paper-subtle"
+                ? "bg-denim text-white poster-shadow-sm"
+                : "bg-card text-ink hover:bg-cloud-subtle"
             )}
           >
             Semua ({result.totalCount})
@@ -140,10 +140,10 @@ export default async function EventsDirectoryPage({
                   page: 1,
                 })}
                 className={cn(
-                  "px-3.5 py-2 border-2 border-ink font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-1.5",
+                  "px-3.5 py-2 rounded-full border-2 border-ink font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-1.5",
                   active
-                    ? "bg-vermilion text-white poster-shadow-sm"
-                    : "bg-card text-ink hover:bg-paper-subtle"
+                    ? "bg-bubblegum text-[#14121F] poster-shadow-sm"
+                    : "bg-card text-ink hover:bg-cloud-subtle"
                 )}
               >
                 <span aria-hidden="true">{cat.emoji}</span>
@@ -168,9 +168,9 @@ export default async function EventsDirectoryPage({
                   page: 1,
                 })}
                 className={cn(
-                  "px-3 py-1.5 border border-ink font-mono text-xs uppercase tracking-wider transition-colors min-h-[38px] inline-flex items-center",
+                  "px-3 py-1.5 rounded-full border border-ink font-mono text-xs uppercase tracking-wider transition-colors min-h-[38px] inline-flex items-center",
                   active
-                    ? "bg-mustard text-[#141210] font-bold border-2"
+                    ? "bg-butter text-[#14121F] font-bold border-2"
                     : "bg-background text-ink-muted hover:text-ink"
                 )}
               >
@@ -193,15 +193,15 @@ export default async function EventsDirectoryPage({
 
       {/* Event Grid */}
       {result.events.length === 0 ? (
-        <div className="border-2 border-dashed border-ink bg-card p-12 text-center my-8">
-          <p className="font-mono text-xs uppercase tracking-widest text-vermilion mb-2">
-            LOKET KOSONG // 0 HASIL
+        <div className="rounded-xl border-2 border-dashed border-ink bg-card p-12 text-center my-8">
+          <p className="font-mono text-xs uppercase tracking-widest text-denim mb-2">
+            BELUM KETEMU // 0 HASIL
           </p>
           <h2 className="font-display text-2xl font-extrabold mb-2">
-            Tidak ada acara yang cocok dengan saringanmu.
+            Belum ada acara yang cocok sama pencarianmu.
           </h2>
           <p className="text-sm text-ink-muted max-w-md mx-auto mb-6">
-            Coba ganti kata kunci pencarian atau pilih kota dan kategori lain.
+            Coba ganti kata kunci atau pilih kota dan kategori lainnya ya!
           </p>
           <Button asChild variant="outline">
             <Link href="/events">Tampilkan Semua Acara</Link>
@@ -245,10 +245,10 @@ export default async function EventsDirectoryPage({
                       key={p}
                       href={buildFilterHref({ page: p })}
                       className={cn(
-                        "w-11 h-11 border-2 border-ink font-mono text-xs font-bold inline-flex items-center justify-center transition-colors",
+                        "w-11 h-11 rounded-md border-2 border-ink font-mono text-xs font-bold inline-flex items-center justify-center transition-colors",
                         p === result.currentPage
-                          ? "bg-vermilion text-white poster-shadow-sm"
-                          : "bg-card text-ink hover:bg-paper-subtle"
+                          ? "bg-denim text-white poster-shadow-sm"
+                          : "bg-card text-ink hover:bg-cloud-subtle"
                       )}
                     >
                       {p}
@@ -273,4 +273,3 @@ export default async function EventsDirectoryPage({
     </main>
   );
 }
-

@@ -55,7 +55,7 @@ export const FALLBACK_EVENTS: EventItem[] = [
       {
         id: "33333333-3333-4333-8333-333333333301",
         event_id: "22222222-2222-4222-8222-222222222201",
-        name: "Karcis Awal (Early Bird)",
+        name: "Tiket Awal (Early Bird)",
         price: 85000,
         quota: 50,
         remaining: 0,
@@ -73,7 +73,7 @@ export const FALLBACK_EVENTS: EventItem[] = [
       {
         id: "33333333-3333-4333-8333-333333333303",
         event_id: "22222222-2222-4222-8222-222222222201",
-        name: "Karcis Pintu + Bundel Zine & Kaset",
+        name: "Tiket Pintu + Bundel Zine & Kaset",
         price: 210000,
         quota: 40,
         remaining: 28,
@@ -140,7 +140,7 @@ export const FALLBACK_EVENTS: EventItem[] = [
       {
         id: "33333333-3333-4333-8333-333333333306",
         event_id: "22222222-2222-4222-8222-222222222203",
-        name: "Karcis Komunitas (Gratis)",
+        name: "Tiket Komunitas (Gratis)",
         price: 0,
         quota: 60,
         remaining: 7,
@@ -330,7 +330,7 @@ export const FALLBACK_EVENTS: EventItem[] = [
       {
         id: "33333333-3333-4333-8333-333333333316",
         event_id: "22222222-2222-4222-8222-222222222208",
-        name: "Karcis Masuk Umum",
+        name: "Tiket Masuk Umum",
         price: 60000,
         quota: 50,
         remaining: 29,

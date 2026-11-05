@@ -46,12 +46,12 @@ export default async function AdminEventsListPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-2 border-ink pb-6">
         <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-vermilion block">
-            MANAJEMEN KATALOG // CRUD
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+            MANAJEMEN KATALOG // NEWTIX
           </span>
           <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
             Daftar Seluruh{" "}
-            <span className="font-serif italic font-normal text-vermilion">
+            <span className="font-serif italic font-semibold text-denim">
               Acara.
             </span>
           </h1>
@@ -65,10 +65,10 @@ export default async function AdminEventsListPage() {
         </Button>
       </div>
 
-      <div className="border-2 border-ink bg-card poster-shadow overflow-x-auto">
+      <div className="rounded-xl border-2 border-ink bg-card poster-shadow overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b-2 border-ink bg-paper-subtle font-mono text-xs uppercase tracking-wider text-ink">
+            <tr className="border-b-2 border-ink bg-cloud-subtle font-mono text-xs uppercase tracking-wider text-ink">
               <th className="p-4">Acara & Lokasi</th>
               <th className="p-4">Jadwal</th>
               <th className="p-4">Status</th>
@@ -89,10 +89,10 @@ export default async function AdminEventsListPage() {
               return (
                 <tr
                   key={ev.id}
-                  className="hover:bg-paper-subtle/50 transition-colors"
+                  className="hover:bg-cloud-subtle/50 transition-colors"
                 >
                   <td className="p-4">
-                    <div className="font-mono text-[11px] text-vermilion font-bold uppercase">
+                    <div className="font-mono text-[11px] text-denim font-bold uppercase">
                       {ev.categories?.emoji} {ev.categories?.name || "Acara"}
                     </div>
                     <div className="font-display text-base font-extrabold text-ink">
@@ -110,9 +110,9 @@ export default async function AdminEventsListPage() {
                   <td className="p-4 whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       {ev.status === "published" ? (
-                        <Badge variant="pine">PUBLISHED</Badge>
+                        <Badge variant="mint">PUBLISHED</Badge>
                       ) : ev.status === "draft" ? (
-                        <Badge variant="mustard">DRAFT</Badge>
+                        <Badge variant="butter">DRAFT</Badge>
                       ) : (
                         <Badge variant="ink">ENDED</Badge>
                       )}
@@ -131,10 +131,10 @@ export default async function AdminEventsListPage() {
                               ? "Ubah ke Draft"
                               : "Publikasikan"
                           }
-                          className="p-1.5 border border-ink bg-background hover:bg-mustard transition-colors cursor-pointer"
+                          className="p-1.5 rounded border border-ink bg-background hover:bg-butter transition-colors cursor-pointer"
                         >
                           {ev.status === "published" ? (
-                            <ToggleRight className="w-4 h-4 text-pine" />
+                            <ToggleRight className="w-4 h-4 text-denim" />
                           ) : (
                             <ToggleLeft className="w-4 h-4 text-ink-muted" />
                           )}
@@ -145,7 +145,7 @@ export default async function AdminEventsListPage() {
 
                   <td className="p-4 font-mono text-xs whitespace-nowrap">
                     <span className="font-bold text-ink">{sold}</span> /{" "}
-                    {totalQuota} karcis
+                    {totalQuota} tiket
                     <span className="block text-[11px] text-ink-muted">
                       ({tList.length} jenis tiket)
                     </span>
@@ -204,4 +204,3 @@ export default async function AdminEventsListPage() {
     </div>
   );
 }
-

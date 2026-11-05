@@ -5,7 +5,7 @@ import { getCategories } from "@/lib/queries";
 import { AdminEventForm } from "@/components/features/admin-event-form";
 
 export const metadata: Metadata = {
-  title: "Cetak Acara Baru",
+  title: "Buat Acara Baru",
 };
 
 export default async function AdminNewEventPage() {
@@ -16,14 +16,14 @@ export default async function AdminNewEventPage() {
       <div>
         <Link
           href="/admin/events"
-          className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-vermilion min-h-[44px]"
+          className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-denim min-h-[44px]"
         >
           <ArrowLeft className="w-4 h-4" />
           Kembali ke Daftar Acara
         </Link>
         <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
-          Cetak Acara{" "}
-          <span className="font-serif italic font-normal text-vermilion">
+          Buat Acara{" "}
+          <span className="font-serif italic font-semibold text-denim">
             Baru.
           </span>
         </h1>
@@ -33,4 +33,3 @@ export default async function AdminNewEventPage() {
     </div>
   );
 }
-

@@ -17,8 +17,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { code } = await params;
   return {
-    title: `Karcis #${code.toUpperCase()}`,
-    description: `Karcis digital resmi KARCIS dengan kode verifikasi #${code.toUpperCase()}.`,
+    title: `Tiket #${code.toUpperCase()}`,
+    description: `Tiket konser digital resmi NewTix dengan kode verifikasi #${code.toUpperCase()}.`,
   };
 }
 
@@ -96,7 +96,7 @@ export default async function TicketDetailPage({
           code: ticketRow.code,
           checked_in_at: ticketRow.checked_in_at,
           holder_name:
-            prof?.full_name || user?.email?.split("@")[0] || "Anggota KARCIS",
+            prof?.full_name || user?.email?.split("@")[0] || "Member NewTix",
           holder_email: user?.email || "",
           ticket_type_name: tt?.name || "Regular",
           ticket_price: tt?.price ?? 0,
@@ -112,14 +112,14 @@ export default async function TicketDetailPage({
         };
       }
     }
-  } else if (normalizedCode === "KRC26SIM") {
+  } else if (normalizedCode === "NTX26SIM" || normalizedCode === "KRC26SIM") {
     const fallbackEvent =
       FALLBACK_EVENTS.find((e) => e.slug === sp.slug) || FALLBACK_EVENTS[0];
     ticketData = {
-      code: "KRC26SIM",
+      code: "NTX26SIM",
       checked_in_at: null,
-      holder_name: "Raka Pradipta (Pratinjau)",
-      holder_email: "raka@karcis.id",
+      holder_name: "Nadia Putri (Pratinjau)",
+      holder_email: "nadia@newtix.id",
       ticket_type_name:
         fallbackEvent.ticket_types?.[1]?.name ||
         fallbackEvent.ticket_types?.[0]?.name ||
@@ -136,7 +136,7 @@ export default async function TicketDetailPage({
       event_ends_at: fallbackEvent.ends_at,
       order_id: "88888888-4444-4444-8888-123456789abc",
       order_created_at: new Date().toISOString(),
-      sibling_codes: ["KRC26SIM"],
+      sibling_codes: ["NTX26SIM"],
     };
   }
 
@@ -150,4 +150,3 @@ export default async function TicketDetailPage({
     </main>
   );
 }
-

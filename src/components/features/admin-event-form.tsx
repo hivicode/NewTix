@@ -51,12 +51,12 @@ export function AdminEventForm({
   return (
     <form
       action={formAction}
-      className="border-2 border-ink bg-card p-6 sm:p-8 poster-shadow space-y-5"
+      className="rounded-2xl border-2 border-ink bg-card p-6 sm:p-8 poster-shadow space-y-5"
     >
       <div className="border-b-2 border-dashed border-ink/25 pb-4">
-        <span className="font-mono text-xs font-bold uppercase tracking-widest text-vermilion block">
+        <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
           {mode === "create"
-            ? "CETAK ACARA BARU"
+            ? "BUAT ACARA BARU"
             : `PERBARUI ACARA // ${event?.slug}`}
         </span>
         <h2 className="font-display text-2xl font-extrabold tracking-tight">
@@ -67,7 +67,7 @@ export function AdminEventForm({
       {state.error && (
         <div
           role="alert"
-          className="border-2 border-destructive bg-destructive/10 p-3.5 font-mono text-xs text-destructive flex items-start gap-2"
+          className="rounded-md border-2 border-destructive bg-destructive/10 p-3.5 font-mono text-xs text-destructive flex items-start gap-2"
         >
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{state.error}</span>
@@ -77,7 +77,7 @@ export function AdminEventForm({
       {state.success && (
         <div
           role="status"
-          className="border-2 border-pine bg-pine/10 p-3.5 font-mono text-xs text-pine flex items-start gap-2"
+          className="rounded-md border-2 border-ink bg-mint text-[#14121F] p-3.5 font-mono text-xs flex items-start gap-2"
         >
           <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{state.success}</span>
@@ -107,7 +107,7 @@ export function AdminEventForm({
             id="category_id"
             name="category_id"
             defaultValue={event?.category_id || categories[0]?.id}
-            className="flex min-h-[44px] w-full border-2 border-ink bg-card px-3.5 py-2 text-sm text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vermilion"
+            className="flex min-h-[44px] w-full rounded-md border-2 border-ink bg-card px-3.5 py-2 text-sm text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-denim"
           >
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -123,9 +123,9 @@ export function AdminEventForm({
             id="status"
             name="status"
             defaultValue={event?.status || "published"}
-            className="flex min-h-[44px] w-full border-2 border-ink bg-card px-3.5 py-2 text-sm text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vermilion"
+            className="flex min-h-[44px] w-full rounded-md border-2 border-ink bg-card px-3.5 py-2 text-sm text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-denim"
           >
-            <option value="published">Published (Tayang di Loket)</option>
+            <option value="published">Published (Tayang di Katalog)</option>
             <option value="draft">Draft (Sembunyikan)</option>
             <option value="ended">Ended (Selesai)</option>
           </select>
@@ -176,7 +176,9 @@ export function AdminEventForm({
         </div>
 
         <div className="space-y-1.5 md:col-span-2">
-          <Label htmlFor="cover_url">URL Gambar Poster (Unsplash / Supabase)</Label>
+          <Label htmlFor="cover_url">
+            URL Gambar Poster (Unsplash / Supabase)
+          </Label>
           <Input
             id="cover_url"
             name="cover_url"
@@ -195,7 +197,7 @@ export function AdminEventForm({
             id="description"
             name="description"
             defaultValue={event?.description || ""}
-            placeholder="Ceritakan penampil, jadwal pintu dibuka, dan apa saja yang didapat pemegang karcis..."
+            placeholder="Ceritakan penampil, jadwal pintu dibuka, dan apa saja yang didapat pemegang tiket..."
             required
           />
         </div>
@@ -271,10 +273,10 @@ export function AdminTicketTypesManager({
   );
 
   return (
-    <div className="border-2 border-ink bg-card p-6 sm:p-8 poster-shadow space-y-6">
+    <div className="rounded-2xl border-2 border-ink bg-card p-6 sm:p-8 poster-shadow space-y-6">
       <div className="border-b-2 border-dashed border-ink/25 pb-4">
-        <span className="font-mono text-xs font-bold uppercase tracking-widest text-vermilion block">
-          KUOTA & HARGA KARCIS
+        <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+          KUOTA & HARGA TIKET
         </span>
         <h2 className="font-display text-2xl font-extrabold tracking-tight">
           Kelola Jenis Tiket ({ticketTypes.length})
@@ -286,16 +288,17 @@ export function AdminTicketTypesManager({
         {ticketTypes.map((tt) => (
           <div
             key={tt.id}
-            className="border-2 border-ink bg-background p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+            className="rounded-xl border-2 border-ink bg-background p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
           >
             <div>
               <p className="font-display text-base font-extrabold text-ink">
                 {tt.name}
               </p>
               <p className="font-mono text-xs text-ink-muted">
-                Harga: <strong className="text-ink">{formatRupiah(tt.price)}</strong>{" "}
-                • Sisa Kuota:{" "}
-                <strong className="text-vermilion">
+                Harga:{" "}
+                <strong className="text-ink">{formatRupiah(tt.price)}</strong> •
+                Sisa Kuota:{" "}
+                <strong className="text-denim">
                   {tt.remaining} / {tt.quota}
                 </strong>
               </p>
@@ -327,7 +330,9 @@ export function AdminTicketTypesManager({
           <p className="font-mono text-xs text-destructive">{state.error}</p>
         )}
         {state.success && (
-          <p className="font-mono text-xs text-pine">{state.success}</p>
+          <p className="font-mono text-xs text-denim font-bold">
+            {state.success}
+          </p>
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -372,4 +377,3 @@ export function AdminTicketTypesManager({
     </div>
   );
 }
-

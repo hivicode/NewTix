@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { AuthForms } from "@/components/features/auth-forms";
 
 export const metadata: Metadata = {
-  title: "Masuk ke Loket",
-  description: "Masuk ke akun KARCIS untuk mengakses tiket dan acara pilihanmu.",
+  title: "Masuk Akun Member",
+  description:
+    "Masuk ke akun NewTix untuk mengakses album tiket dan acara pilihanmu.",
 };
 
 export default async function LoginPage({
@@ -20,4 +21,3 @@ export default async function LoginPage({
     />
   );
 }
-

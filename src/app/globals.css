@@ -3,81 +3,84 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --paper: #F4EFE6;
-  --paper-subtle: #EAE3D5;
-  --ink: #141210;
-  --ink-muted: #57524C;
-  --vermilion: #FF4F1F;
-  --vermilion-hover: #E03E12;
-  --mustard: #F2B705;
-  --pine: #1F6F54;
-  --line: rgba(20, 18, 16, 0.16);
-  --line-strong: rgba(20, 18, 16, 0.35);
+  --cloud: #F7F5FF;
+  --cloud-subtle: #ECE8FA;
+  --ink: #14121F;
+  --ink-muted: #585470;
+  --denim: #3F6FD9;
+  --denim-hover: #2E5BC2;
+  --bubblegum: #FF9ECF;
+  --butter: #FFE98A;
+  --mint: #9FE8C8;
+  --line: rgba(20, 18, 31, 0.16);
+  --line-strong: rgba(20, 18, 31, 0.35);
 
-  --background: var(--paper);
+  --background: var(--cloud);
   --foreground: var(--ink);
-  --card: #FAF7F2;
+  --card: #FFFFFF;
   --card-foreground: var(--ink);
-  --popover: #FAF7F2;
+  --popover: #FFFFFF;
   --popover-foreground: var(--ink);
-  --primary: var(--vermilion);
-  --primary-foreground: #FAF7F2;
-  --secondary: var(--paper-subtle);
+  --primary: var(--denim);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--cloud-subtle);
   --secondary-foreground: var(--ink);
-  --muted: var(--paper-subtle);
+  --muted: var(--cloud-subtle);
   --muted-foreground: var(--ink-muted);
-  --accent: var(--mustard);
-  --accent-foreground: var(--ink);
-  --destructive: #D92D20;
-  --destructive-foreground: #FAF7F2;
+  --accent: var(--bubblegum);
+  --accent-foreground: #14121F;
+  --destructive: #E11D48;
+  --destructive-foreground: #FFFFFF;
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--vermilion);
-  --radius: 0.25rem;
+  --ring: var(--denim);
+  --radius: 0.5rem;
 }
 
 .dark {
-  --paper: #141210;
-  --paper-subtle: #1E1B18;
-  --ink: #F4EFE6;
-  --ink-muted: #A39B8F;
-  --vermilion: #FF4F1F;
-  --vermilion-hover: #FF683E;
-  --mustard: #F2B705;
-  --pine: #288F6C;
-  --line: rgba(244, 239, 230, 0.15);
-  --line-strong: rgba(244, 239, 230, 0.32);
+  --cloud: #0E1020;
+  --cloud-subtle: #181B34;
+  --ink: #F7F5FF;
+  --ink-muted: #B6B3D6;
+  --denim: #3F6FD9;
+  --denim-hover: #5783E6;
+  --bubblegum: #FF9ECF;
+  --butter: #FFE98A;
+  --mint: #9FE8C8;
+  --line: rgba(247, 245, 255, 0.16);
+  --line-strong: rgba(247, 245, 255, 0.34);
 
-  --background: #141210;
-  --foreground: #F4EFE6;
-  --card: #1C1916;
-  --card-foreground: #F4EFE6;
-  --popover: #1C1916;
-  --popover-foreground: #F4EFE6;
-  --primary: #FF4F1F;
-  --primary-foreground: #141210;
-  --secondary: #25211D;
-  --secondary-foreground: #F4EFE6;
-  --muted: #25211D;
-  --muted-foreground: #A39B8F;
-  --accent: #F2B705;
-  --accent-foreground: #141210;
-  --destructive: #F04438;
-  --destructive-foreground: #F4EFE6;
-  --border: rgba(244, 239, 230, 0.15);
-  --input: rgba(244, 239, 230, 0.28);
-  --ring: #FF4F1F;
+  --background: #0E1020;
+  --foreground: #F7F5FF;
+  --card: #15182E;
+  --card-foreground: #F7F5FF;
+  --popover: #15182E;
+  --popover-foreground: #F7F5FF;
+  --primary: #3F6FD9;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1E223D;
+  --secondary-foreground: #F7F5FF;
+  --muted: #1E223D;
+  --muted-foreground: #B6B3D6;
+  --accent: #FF9ECF;
+  --accent-foreground: #14121F;
+  --destructive: #FB7185;
+  --destructive-foreground: #14121F;
+  --border: rgba(247, 245, 255, 0.16);
+  --input: rgba(247, 245, 255, 0.28);
+  --ring: #FF9ECF;
 }
 
 @theme inline {
-  --color-paper: var(--paper);
-  --color-paper-subtle: var(--paper-subtle);
+  --color-cloud: var(--cloud);
+  --color-cloud-subtle: var(--cloud-subtle);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
-  --color-vermilion: var(--vermilion);
-  --color-vermilion-hover: var(--vermilion-hover);
-  --color-mustard: var(--mustard);
-  --color-pine: var(--pine);
+  --color-denim: var(--denim);
+  --color-denim-hover: var(--denim-hover);
+  --color-bubblegum: var(--bubblegum);
+  --color-butter: var(--butter);
+  --color-mint: var(--mint);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
@@ -101,15 +104,21 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --font-display: var(--font-bricolage), sans-serif;
+  --font-display: var(--font-fraunces), var(--font-bricolage), serif;
   --font-sans: var(--font-bricolage), sans-serif;
-  --font-serif: var(--font-instrument-serif), serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-serif: var(--font-fraunces), serif;
+  --font-mono: var(--font-space-mono), monospace;
 }
 
 @layer base {
   * {
     border-color: var(--border);
+    scrollbar-width: thin;
+    scrollbar-color: var(--bubblegum) var(--cloud-subtle);
+  }
+
+  .dark * {
+    scrollbar-color: var(--denim) #15182E;
   }
 
   body {
@@ -117,17 +126,152 @@
     color: var(--foreground);
     font-family: var(--font-sans);
     overflow-x: hidden;
-    selection-background-color: var(--vermilion);
-    selection-color: #FAF7F2;
+    transition: background-color 300ms ease, color 300ms ease;
   }
 
   ::selection {
-    background-color: var(--vermilion);
-    color: #FAF7F2;
+    background-color: var(--bubblegum);
+    color: #14121F;
   }
 }
 
-/* Ticket Perforation & Neo-brutalist Print Utilities */
+/* ============================================================================
+   Custom Y2K Scrollbar Styling
+   ============================================================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cloud-subtle);
+  border-left: 1.5px solid var(--line);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #15182E;
+  border-left: 1.5px solid rgba(247, 245, 255, 0.12);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--bubblegum);
+  border: 2px solid var(--cloud-subtle);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--denim);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--denim);
+  border: 2px solid #15182E;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--bubblegum);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--cloud-subtle);
+}
+
+.dark ::-webkit-scrollbar-corner {
+  background: #15182E;
+}
+
+/* ============================================================================
+   View Transitions API — Circular Reveal dari Koordinat Klik Toggle
+   ============================================================================ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* Keyframes untuk Matahari, Awan, Bintang Berkelap-kelip & Bintang Jatuh di Toggle */
+@keyframes sun-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cloud-float {
+  0%,
+  100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(2.5px);
+  }
+}
+
+@keyframes star-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes shooting-star {
+  0%,
+  72% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  78% {
+    opacity: 1;
+    transform: translate(-4px, 2px) scale(1);
+  }
+  92% {
+    opacity: 0;
+    transform: translate(-18px, 9px) scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-18px, 9px) scale(0.5);
+  }
+}
+
+.animate-sun-rays {
+  animation: sun-spin 14s linear infinite;
+  transform-origin: center;
+}
+
+.animate-cloud-slow {
+  animation: cloud-float 4.5s ease-in-out infinite;
+}
+
+.animate-twinkle-1 {
+  animation: star-twinkle 2.2s ease-in-out infinite;
+}
+
+.animate-twinkle-2 {
+  animation: star-twinkle 3.1s ease-in-out infinite 0.7s;
+}
+
+.animate-shooting-star {
+  animation: shooting-star 5.5s ease-in-out infinite;
+}
+
+/* Ticket Perforation & Y2K Photobooth Utilities */
 .ticket-notch-horizontal {
   position: relative;
 }
@@ -140,7 +284,7 @@
   width: 20px;
   height: 20px;
   background-color: var(--background);
-  border: 1.5px solid var(--line-strong);
+  border: 2px solid var(--ink);
   border-radius: 9999px;
   transform: translateY(-50%);
   z-index: 10;
@@ -161,7 +305,7 @@
 }
 
 .dark .sticker-shadow {
-  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.85);
+  box-shadow: 3px 3px 0px #060711;
 }
 
 .poster-shadow {
@@ -169,7 +313,7 @@
 }
 
 .dark .poster-shadow {
-  box-shadow: 5px 5px 0px #000000;
+  box-shadow: 5px 5px 0px #060711;
 }
 
 .poster-shadow-sm {
@@ -177,7 +321,21 @@
 }
 
 .dark .poster-shadow-sm {
-  box-shadow: 3px 3px 0px #000000;
+  box-shadow: 3px 3px 0px #060711;
+}
+
+/* Y2K Photobooth Frame */
+.photobooth-frame {
+  background-color: #FFFFFF;
+  border: 2px solid #14121F;
+  padding: 0.5rem 0.5rem 1.4rem 0.5rem;
+  box-shadow: 3px 3px 0px var(--ink);
+  position: relative;
+}
+
+.dark .photobooth-frame {
+  background-color: #1E223D;
+  border-color: #F7F5FF;
 }
 
 /* Marquee Animation */
@@ -197,8 +355,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
-    animation: none;
+  .animate-marquee,
+  .animate-sun-rays,
+  .animate-cloud-slow,
+  .animate-twinkle-1,
+  .animate-twinkle-2,
+  .animate-shooting-star {
+    animation: none !important;
+  }
+
+  body {
+    transition: none !important;
   }
 }
-

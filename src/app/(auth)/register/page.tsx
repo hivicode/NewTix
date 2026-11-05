@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { AuthForms } from "@/components/features/auth-forms";
 
 export const metadata: Metadata = {
-  title: "Daftar Akun Baru",
+  title: "Daftar Member Baru",
   description:
-    "Buat akun KARCIS untuk memesan tiket gigs, festival, dan lokakarya.",
+    "Buat akun NewTix untuk memesan tiket konser, festival, dan lokakarya seru.",
 };
 
 export default async function RegisterPage({
@@ -21,4 +21,3 @@ export default async function RegisterPage({
     />
   );
 }
-

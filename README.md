@@ -1,7 +1,7 @@
-# KARCIS — Platform Tiket Acara Independen
+# NewTix — Platform Tiket Acara & Konser Bergaya Y2K
 
-> **"Tiket aman, antrean nggak ada."**
-> Aplikasi web pemesanan tiket acara online (konser/gigs, lokakarya kreatif, temu teknologi, pemutaran film, dan festival kuliner) dengan konsep visual **"tiket fisik bertemu poster gigs"** serta transaksi anti-overselling berbasis PostgreSQL row-level locking dan Supabase Realtime.
+> **"Tiket aman, hati tenang."**
+> Aplikasi web pemesanan tiket acara online (konser/gigs, lokakarya kreatif, temu teknologi, pemutaran film, dan festival kuliner) dengan konsep visual **"tiket konser era Y2K"** (stiker kelinci & bintang SVG kustom, lembar foto photobooth, dan tiket ber-perforasi) serta transaksi anti-overselling berbasis PostgreSQL row-level locking dan Supabase Realtime.
 
 ---
 
@@ -67,7 +67,7 @@ Buka [http://localhost:3000](http://localhost:3000) di browser.
 ### 6. Cara Menjadikan Akun Sebagai Admin Lewat SQL
 Secara default, setiap pengguna baru memiliki `role = 'member'` dan tidak bisa mengubah role miliknya sendiri (dilindungi oleh RLS policy `profiles_update_own_no_role_escalation`). Untuk mempromosikan akunmu menjadi `admin`:
 
-1. Daftar/login terlebih dahulu di aplikasi KARCIS.
+1. Daftar/login terlebih dahulu di aplikasi NewTix.
 2. Buka **Supabase Dashboard → SQL Editor** dan jalankan query berikut (ganti dengan alamat email akunmu):
 
 ```sql
@@ -77,7 +77,7 @@ where id = (
   select id from auth.users where email = 'emailkamu@domain.id'
 );
 ```
-3. Setelah dijalankan, refresh halaman aplikasi—menu **Ruang Kendali (`/admin`)** akan muncul di Navbar dan kamu bisa mengakses seluruh fitur CRUD admin.
+3. Setelah dijalankan, refresh halaman aplikasi—menu **Ruang Admin (`/admin`)** akan muncul di Navbar dan kamu bisa mengakses seluruh fitur CRUD admin.
 
 ---
 
@@ -90,20 +90,19 @@ where id = (
 3. **Kuota & Pesanan Real-time (Supabase Realtime)**:
    - Halaman detail acara (`/events/[slug]`) berlangganan perubahan tabel `ticket_types` secara langsung; angka sisa kuota beranimasi tanpa reload, memunculkan badge **HAMPIR HABIS** (`< 15%`) dan **SOLD OUT** (`0`).
    - Dashboard Admin (`/admin`) berlangganan `INSERT` pada tabel `orders` untuk menampilkan feed pembelian terbaru secara live.
-4. **Dompet Karcis & Tiket Digital QR (`/my-tickets/[code]`)**:
-   - Desain karcis kertas lengkap dengan perforasi kiri-kanan, stub tanggal vertikal, kode QR (`qrcode.react`), kode verifikasi 8 karakter monospace, ilustrasi barcode, animasi tiket keluar dari mesin cetak + confetti setelah pembelian, dan fitur cetak/simpan PDF.
-5. **Ruang Kendali Admin (`/admin/*`)**:
+4. **Album Tiket & Tiket Digital QR (`/my-tickets/[code]`)**:
+   - Desain tiket konser era Y2K lengkap dengan perforasi kiri-kanan, stub tanggal vertikal, kode QR (`qrcode.react`), maskot kelinci SVG, kode verifikasi 8 karakter monospace, ilustrasi barcode, animasi tiket keluar dari mesin cetak + confetti setelah pembelian, dan fitur cetak/simpan PDF.
+5. **Ruang Admin (`/admin/*`)**:
    - Statistik total event, tiket terjual, total pendapatan, grafik tingkat keterisian kuota, tabel CRUD acara, toggle cepat status `published`/`draft`, pengelolaan jenis tiket (`ticket_types`), dan daftar pembeli per acara.
-6. **Identitas Visual "Tiket Fisik Bertemu Poster Gigs"**:
-   - Palet kertas (`#F4EFE6`), tinta (`#141210`), vermilion (`#FF4F1F`), mustard (`#F2B705`), dan pine (`#1F6F54`), serta mode gelap **"Malam di Venue"**.
-   - Tipografi `Bricolage Grotesque`, `Instrument Serif` (italic accent), dan `Geist Mono`.
+6. **Identitas Visual "Tiket Konser Era Y2K"**:
+   - Palet `cloud` (`#F7F5FF`), `ink` (`#14121F`), `denim` (`#3F6FD9`), `bubblegum` (`#FF9ECF`), `butter` (`#FFE98A`), dan `mint` (`#9FE8C8`), serta mode gelap `navy` (`#0E1020`).
+   - Tipografi `Fraunces` + `Bricolage Grotesque` + `Space Mono`.
 
 ---
 
 ## Asumsi yang Diambil
 
-1. **Mode Pratinjau Tanpa Kredensial (Graceful Fallback)**: Jika variabel `.env.local` belum diisi saat proyek pertama kali dijalankan atau di-build di CI/Vercel, aplikasi secara otomatis menampilkan data seed statis yang identik dengan `supabase/schema.sql` serta mengizinkan simulasi lihat tiket `#KRC26SIM` agar antarmuka dapat langsung dieksplorasi tanpa crash.
+1. **Mode Pratinjau Tanpa Kredensial (Graceful Fallback)**: Jika variabel `.env.local` belum diisi saat proyek pertama kali dijalankan atau di-build di CI/Vercel, aplikasi secara otomatis menampilkan data seed statis serta mengizinkan simulasi lihat tiket `#NTX26SIM` agar antarmuka dapat langsung dieksplorasi tanpa crash.
 2. **Pembayaran Simulasi**: Sesuai spesifikasi, transaksi langsung berstatus `paid` di dalam fungsi RPC `purchase_tickets` tanpa payment gateway pihak ketiga.
-3. **Bundler Build**: Skrip `npm run build` menggunakan `next build --webpack` untuk memastikan kestabilan pemrosesan worker PostCSS Tailwind v4 di lingkungan Windows maupun Linux/Vercel.
-4. **Simpan Tiket**: Tombol *"Cetak / Simpan PDF"* pada halaman tiket digital (`/my-tickets/[code]`) memanggil dialog cetak native browser (`window.print()`) dengan stylesheet `@media print` yang menyembunyikan tombol navigasi sehingga hanya mencetak badan karcis fisik.
-
+3. **Bundler Build**: Skrip `npm run build` menggunakan `next build --webpack` untuk memastikan kestabilan pemrosesan worker PostCSS Tailwind v4.
+4. **Simpan Tiket**: Tombol *"Simpan sebagai Gambar / PDF"* pada halaman tiket digital (`/my-tickets/[code]`) memanggil dialog cetak native browser (`window.print()`) dengan stylesheet `@media print` yang menyembunyikan tombol navigasi.

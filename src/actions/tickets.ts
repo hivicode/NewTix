@@ -44,7 +44,7 @@ export async function purchaseTicketsAction(
   if (!isServerSupabaseConfigured()) {
     // Mode pratinjau tanpa koneksi database: arahkan ke contoh tiket simulasi
     redirect(
-      `/my-tickets/KRC26SIM?purchased=1&qty=${parsed.data.qty}&slug=${encodeURIComponent(
+      `/my-tickets/NTX26SIM?purchased=1&qty=${parsed.data.qty}&slug=${encodeURIComponent(
         parsed.data.eventSlug
       )}`
     );
@@ -70,7 +70,7 @@ export async function purchaseTicketsAction(
     const msg = error.message || "";
     if (msg.includes("SOLD_OUT")) {
       return {
-        error: "Yah, karcis kategori ini baru saja habis terjual!",
+        error: "Yah, tiket kategori ini baru saja habis terjual!",
       };
     }
     if (msg.includes("INSUFFICIENT_QUOTA")) {

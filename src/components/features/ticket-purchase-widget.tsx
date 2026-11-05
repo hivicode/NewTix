@@ -111,25 +111,23 @@ export function TicketPurchaseWidget({
   const totalAmount = selectedTicket ? selectedTicket.price * qty : 0;
 
   return (
-    <div className="border-2 border-ink bg-card p-5 sm:p-6 poster-shadow relative">
+    <div className="rounded-2xl border-2 border-ink bg-card p-5 sm:p-6 poster-shadow relative">
       {/* Header Loket */}
       <div className="flex items-center justify-between border-b-2 border-dashed border-ink/25 pb-4 mb-5">
         <div>
-          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-vermilion block">
-            LOKET KARCIS RESMI
+          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-denim block">
+            BOOTH TIKET // NEWTIX
           </span>
           <h2 className="font-display text-2xl font-extrabold tracking-tight">
             Pilih Kategori Tiket
           </h2>
         </div>
 
-        <div className="inline-flex items-center gap-1.5 border border-ink px-2.5 py-1 bg-background font-mono text-[10px] uppercase tracking-wider">
+        <div className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-2.5 py-1 bg-butter text-[#14121F] font-mono text-[10px] font-bold uppercase tracking-wider">
           <Radio
             className={cn(
               "w-3 h-3",
-              realtimeConnected
-                ? "text-pine animate-pulse"
-                : "text-vermilion"
+              realtimeConnected ? "text-denim animate-pulse" : "text-[#14121F]"
             )}
           />
           <span>{realtimeConnected ? "KUOTA LIVE" : "SIAP CETAK"}</span>
@@ -139,7 +137,7 @@ export function TicketPurchaseWidget({
       {state.error && (
         <div
           role="alert"
-          className="mb-4 border-2 border-destructive bg-destructive/10 p-3 text-xs font-mono text-destructive flex items-start gap-2"
+          className="mb-4 rounded-md border-2 border-destructive bg-destructive/10 p-3 text-xs font-mono text-destructive flex items-start gap-2"
         >
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{state.error}</span>
@@ -164,11 +162,11 @@ export function TicketPurchaseWidget({
                 setQty(1);
               }}
               className={cn(
-                "w-full text-left border-2 p-4 transition-all relative cursor-pointer",
+                "w-full text-left rounded-xl border-2 p-4 transition-all relative cursor-pointer",
                 isSoldOut
-                  ? "border-ink/30 bg-paper-subtle/60 opacity-60 cursor-not-allowed"
+                  ? "border-ink/30 bg-cloud-subtle/60 opacity-60 cursor-not-allowed"
                   : isSelected
-                  ? "border-ink bg-paper-subtle poster-shadow-sm"
+                  ? "border-ink bg-cloud-subtle poster-shadow-sm"
                   : "border-ink/60 bg-background hover:border-ink"
               )}
             >
@@ -184,12 +182,16 @@ export function TicketPurchaseWidget({
                       </Badge>
                     )}
                     {isLowQuota && (
-                      <Badge variant="default" sticker className="text-[10px]">
+                      <Badge
+                        variant="bubblegum"
+                        sticker
+                        className="text-[10px]"
+                      >
                         HAMPIR HABIS
                       </Badge>
                     )}
                     {!isSoldOut && ticket.price === 0 && (
-                      <Badge variant="pine" className="text-[10px]">
+                      <Badge variant="mint" className="text-[10px]">
                         GRATIS
                       </Badge>
                     )}
@@ -202,9 +204,7 @@ export function TicketPurchaseWidget({
                       <motion.span
                         key={ticket.remaining}
                         initial={
-                          prefersReducedMotion
-                            ? false
-                            : { y: -10, opacity: 0 }
+                          prefersReducedMotion ? false : { y: -10, opacity: 0 }
                         }
                         animate={{ y: 0, opacity: 1 }}
                         exit={
@@ -214,8 +214,8 @@ export function TicketPurchaseWidget({
                         }
                         transition={{ duration: 0.18 }}
                         className={cn(
-                          "inline-block font-bold px-1.5 py-0.2 border border-ink/30 bg-card",
-                          isLowQuota ? "text-vermilion" : "text-ink"
+                          "inline-block font-bold px-1.5 py-0.5 rounded border border-ink/30 bg-card",
+                          isLowQuota ? "text-denim" : "text-ink"
                         )}
                       >
                         {ticket.remaining} / {ticket.quota}
@@ -229,7 +229,7 @@ export function TicketPurchaseWidget({
                     {formatRupiah(ticket.price)}
                   </span>
                   <span className="font-mono text-[10px] text-ink-muted uppercase">
-                    / karcis
+                    / tiket
                   </span>
                 </div>
               </div>
@@ -247,10 +247,10 @@ export function TicketPurchaseWidget({
         <div className="flex items-center justify-between border-y-2 border-dashed border-ink/25 py-4">
           <div>
             <span className="font-mono text-xs font-bold uppercase tracking-wider text-ink block">
-              Jumlah Karcis
+              Jumlah Tiket
             </span>
             <span className="font-mono text-[11px] text-ink-muted">
-              Maks. 5 karcis per pesanan
+              Maks. 5 tiket per pesanan
             </span>
           </div>
 
@@ -266,7 +266,7 @@ export function TicketPurchaseWidget({
               <Minus className="w-4 h-4" />
             </Button>
 
-            <div className="w-12 h-11 border-2 border-ink bg-background flex items-center justify-center font-mono text-base font-extrabold">
+            <div className="w-12 h-11 rounded-md border-2 border-ink bg-background flex items-center justify-center font-mono text-base font-extrabold">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.span
                   key={qty}
@@ -300,7 +300,7 @@ export function TicketPurchaseWidget({
         </div>
 
         {/* Live Total Price Summary */}
-        <div className="bg-paper-subtle border-2 border-ink p-4 flex items-center justify-between">
+        <div className="rounded-xl bg-cloud-subtle border-2 border-ink p-4 flex items-center justify-between">
           <div>
             <span className="font-mono text-[11px] uppercase tracking-widest text-ink-muted block">
               TOTAL PEMBAYARAN (SIMULASI)
@@ -317,7 +317,7 @@ export function TicketPurchaseWidget({
               key={totalAmount}
               initial={prefersReducedMotion ? false : { y: -8, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="font-mono text-xl sm:text-2xl font-extrabold text-vermilion"
+              className="font-mono text-xl sm:text-2xl font-extrabold text-denim"
             >
               {formatRupiah(totalAmount)}
             </motion.div>
@@ -338,7 +338,7 @@ export function TicketPurchaseWidget({
           {isPending ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              Mencetak Karcis...
+              Mencetak Tiketmu...
             </>
           ) : allSoldOut ||
             (selectedTicket && selectedTicket.remaining === 0) ? (
@@ -357,13 +357,10 @@ export function TicketPurchaseWidget({
         </Button>
 
         <p className="flex items-center justify-center gap-1.5 font-mono text-[11px] text-ink-muted text-center">
-          <ShieldCheck className="w-3.5 h-3.5 text-pine shrink-0" />
-          <span>
-            Anti-overselling: kuota dikunci atomik saat tombol ditekan.
-          </span>
+          <ShieldCheck className="w-3.5 h-3.5 text-denim shrink-0" />
+          <span>Tiket aman, kuota dikunci otomatis saat tombol ditekan.</span>
         </p>
       </form>
     </div>
   );
 }
-

@@ -20,6 +20,7 @@ import {
   formatStubDate,
 } from "@/lib/utils";
 import { TicketPurchaseWidget } from "@/components/features/ticket-purchase-widget";
+import { Y2KStarSticker } from "@/components/shared/y2k-stickers";
 
 export async function generateMetadata({
   params,
@@ -39,7 +40,7 @@ export async function generateMetadata({
     title: `${event.title} — ${event.city}`,
     description: event.description.slice(0, 160),
     openGraph: {
-      title: `${event.title} | KARCIS`,
+      title: `${event.title} | NewTix`,
       description: event.description.slice(0, 160),
       type: "website",
       locale: "id_ID",
@@ -72,44 +73,56 @@ export default async function EventDetailPage({
       <div className="mb-6 flex items-center justify-between">
         <Link
           href="/events"
-          className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-vermilion transition-colors min-h-[44px]"
+          className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-denim transition-colors min-h-[44px]"
         >
           <ArrowLeft className="w-4 h-4" />
           Kembali ke Daftar Acara
         </Link>
 
         <span className="font-mono text-xs text-ink-muted hidden sm:inline">
-          KODE ARSIP // {event.slug.toUpperCase().slice(0, 18)}
+          NEWTIX SNAPSHOT // {event.slug.toUpperCase().slice(0, 18)}
         </span>
       </div>
 
-      {/* Main Asymmetric Gig Poster + Live Ticket Booth */}
+      {/* Main Asymmetric Y2K Photobooth Poster + Live Ticket Booth */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
         {/* Left 7 columns: Poster & Story */}
         <div className="lg:col-span-7 space-y-8">
-          <div className="border-2 border-ink bg-card poster-shadow overflow-hidden">
+          <div className="rounded-2xl border-2 border-ink bg-card poster-shadow overflow-hidden">
             {/* Top Poster Strip */}
-            <div className="bg-ink text-paper px-5 py-3 flex flex-wrap items-center justify-between gap-2 font-mono text-xs uppercase tracking-widest">
-              <span className="inline-flex items-center gap-2">
+            <div className="bg-denim text-white px-5 py-3 flex flex-wrap items-center justify-between gap-2 font-mono text-xs uppercase tracking-widest border-b-2 border-ink">
+              <span className="inline-flex items-center gap-2 font-bold">
                 <span>{event.categories?.emoji || "🎫"}</span>
                 <span>{event.categories?.name || "Acara Pilihan"}</span>
               </span>
-              <span className="text-mustard font-bold">
-                {event.city} // {stub.day} {stub.month}
+              <span className="rounded-full bg-butter text-[#14121F] border border-[#14121F] px-2.5 py-0.5 font-bold">
+                {event.city} ★ {stub.day} {stub.month}
               </span>
             </div>
 
-            {/* Cover Image */}
+            {/* Y2K Photobooth Cover Frame */}
             {event.cover_url && (
-              <div className="relative h-64 sm:h-96 w-full border-b-2 border-ink bg-ink">
-                <Image
-                  src={event.cover_url}
-                  alt={event.title}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 58vw"
-                  className="object-cover"
-                />
+              <div className="p-4 sm:p-6 bg-cloud-subtle border-b-2 border-dashed border-ink/30">
+                <div className="photobooth-frame">
+                  <div className="relative h-64 sm:h-92 w-full border border-[#14121F] overflow-hidden bg-ink">
+                    <Image
+                      src={event.cover_url}
+                      alt={event.title}
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 58vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="mt-2 flex items-center justify-between font-mono text-xs text-ink-muted px-1">
+                    <span>PHOTOBOOTH STRIP // {event.city.toUpperCase()}</span>
+                    <span>★ NEWTIX OFFICIAL ★</span>
+                  </div>
+                  <Y2KStarSticker
+                    className="w-7 h-7 absolute -top-3 -right-3 rotate-12"
+                    color="#FF9ECF"
+                  />
+                </div>
               </div>
             )}
 
@@ -122,7 +135,7 @@ export default async function EventDetailPage({
               {/* Ticket Stub Metadata Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-y-2 border-dashed border-ink/25 py-5 mb-6">
                 <div className="flex items-start gap-3">
-                  <Calendar className="w-5 h-5 text-vermilion shrink-0 mt-0.5" />
+                  <Calendar className="w-5 h-5 text-denim shrink-0 mt-0.5" />
                   <div>
                     <span className="font-mono text-[10px] uppercase tracking-widest text-ink-muted block">
                       TANGGAL
@@ -134,10 +147,10 @@ export default async function EventDetailPage({
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <Clock className="w-5 h-5 text-vermilion shrink-0 mt-0.5" />
+                  <Clock className="w-5 h-5 text-denim shrink-0 mt-0.5" />
                   <div>
                     <span className="font-mono text-[10px] uppercase tracking-widest text-ink-muted block">
-                      WAKTU PINTU
+                      WAKTU ACARA
                     </span>
                     <span className="font-mono text-xs font-bold text-ink">
                       {formatEventTime(event.starts_at)} —{" "}
@@ -147,7 +160,7 @@ export default async function EventDetailPage({
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-vermilion shrink-0 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-denim shrink-0 mt-0.5" />
                   <div>
                     <span className="font-mono text-[10px] uppercase tracking-widest text-ink-muted block">
                       LOKASI VENUE
@@ -161,8 +174,8 @@ export default async function EventDetailPage({
 
               {/* Description */}
               <div className="space-y-4">
-                <h2 className="font-mono text-xs font-bold uppercase tracking-widest text-vermilion">
-                  CATATAN PENYELENGGARA & KURASI ACARA
+                <h2 className="font-mono text-xs font-bold uppercase tracking-widest text-denim">
+                  CERITA ACARA & INFO PENTING
                 </h2>
                 <p className="text-base text-ink leading-relaxed whitespace-pre-line">
                   {event.description}
@@ -172,17 +185,17 @@ export default async function EventDetailPage({
               {/* Venue Rules Footer */}
               <div className="mt-8 pt-6 border-t-2 border-dashed border-ink/25 grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs text-ink-muted">
                 <div className="flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-pine shrink-0 mt-0.5" />
+                  <ShieldCheck className="w-4 h-4 text-denim shrink-0 mt-0.5" />
                   <span>
-                    Karcis berisi kode QR 8-karakter unik yang dipindai satu kali
+                    Tiket berisi kode QR 8-karakter unik yang dipindai satu kali
                     di pintu masuk venue.
                   </span>
                 </div>
                 <div className="flex items-start gap-2.5">
-                  <Share2 className="w-4 h-4 text-vermilion shrink-0 mt-0.5" />
+                  <Share2 className="w-4 h-4 text-denim shrink-0 mt-0.5" />
                   <span>
-                    Datang 30 menit sebelum acara dimulai untuk penukaran gelang
-                    atau kupon fisik.
+                    Datang 30 menit lebih awal biar santai tukar gelang dan
+                    foto-foto dulu!
                   </span>
                 </div>
               </div>
@@ -203,4 +216,3 @@ export default async function EventDetailPage({
     </main>
   );
 }
-

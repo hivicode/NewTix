@@ -21,9 +21,9 @@ import { formatRupiah } from "@/lib/utils";
 import type { EventItem } from "@/types/database";
 
 export const metadata: Metadata = {
-  title: "Ruang Kendali Admin",
+  title: "Ruang Admin NewTix",
   description:
-    "Statistik penjualan tiket, pendapatan, dan pantauan transaksi real-time.",
+    "Statistik penjualan tiket, pendapatan, dan pantauan transaksi real-time NewTix.",
 };
 
 export default async function AdminDashboardPage() {
@@ -42,7 +42,9 @@ export default async function AdminDashboardPage() {
           .order("starts_at", { ascending: true }),
         supabase
           .from("orders")
-          .select("id, total_amount, status, created_at, events(title), profiles(full_name)")
+          .select(
+            "id, total_amount, status, created_at, events(title), profiles(full_name)"
+          )
           .eq("status", "paid")
           .order("created_at", { ascending: false })
           .limit(20),
@@ -62,13 +64,12 @@ export default async function AdminDashboardPage() {
           total_amount: o.total_amount,
           status: o.status,
           created_at: o.created_at,
-          event_title: ev?.title || "Acara KARCIS",
-          buyer_name: prof?.full_name || "Anggota",
+          event_title: ev?.title || "Acara NewTix",
+          buyer_name: prof?.full_name || "Member",
         };
       });
     }
 
-    // Hitung total tiket terjual & pendapatan dari selisih quota - remaining + orders
     let computedSold = 0;
     let computedRevenue = 0;
     for (const ev of events) {
@@ -92,7 +93,6 @@ export default async function AdminDashboardPage() {
     }
   }
 
-  // Data grafik sederhana per event
   const chartRows = events.slice(0, 6).map((ev) => {
     const tList = ev.ticket_types || [];
     const quota = tList.reduce((acc, t) => acc + t.quota, 0);
@@ -114,12 +114,12 @@ export default async function AdminDashboardPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-2 border-ink pb-6">
         <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-vermilion block">
-            PUSAT KENDALI // KARCIS
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+            PUSAT KENDALI // NEWTIX
           </span>
           <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
-            Ringkasan Loket &{" "}
-            <span className="font-serif italic font-normal text-vermilion">
+            Ringkasan Tiket &{" "}
+            <span className="font-serif italic font-semibold text-denim">
               Pantauan Live.
             </span>
           </h1>
@@ -135,12 +135,12 @@ export default async function AdminDashboardPage() {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="border-2 border-ink bg-card p-5 poster-shadow">
+        <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
           <div className="flex items-center justify-between text-ink-muted mb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-wider">
               TOTAL ACARA
             </span>
-            <Calendar className="w-4 h-4 text-vermilion" />
+            <Calendar className="w-4 h-4 text-denim" />
           </div>
           <span className="font-mono text-4xl font-extrabold text-ink block">
             {events.length}
@@ -151,14 +151,14 @@ export default async function AdminDashboardPage() {
           </span>
         </div>
 
-        <div className="border-2 border-ink bg-card p-5 poster-shadow">
+        <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
           <div className="flex items-center justify-between text-ink-muted mb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-wider">
-              KARCIS TERJUAL
+              TIKET TERJUAL
             </span>
-            <TicketIcon className="w-4 h-4 text-vermilion" />
+            <TicketIcon className="w-4 h-4 text-denim" />
           </div>
-          <span className="font-mono text-4xl font-extrabold text-vermilion block">
+          <span className="font-mono text-4xl font-extrabold text-denim block">
             {totalTicketsSold.toLocaleString("id-ID")}
           </span>
           <span className="font-mono text-xs text-ink-muted mt-1 block">
@@ -166,17 +166,17 @@ export default async function AdminDashboardPage() {
           </span>
         </div>
 
-        <div className="border-2 border-ink bg-card p-5 poster-shadow">
+        <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
           <div className="flex items-center justify-between text-ink-muted mb-3">
             <span className="font-mono text-xs font-bold uppercase tracking-wider">
               TOTAL PENDAPATAN
             </span>
-            <Coins className="w-4 h-4 text-pine" />
+            <Coins className="w-4 h-4 text-denim" />
           </div>
           <span className="font-mono text-3xl sm:text-4xl font-extrabold text-ink block">
             {formatRupiah(totalOrdersRevenue)}
           </span>
-          <span className="font-mono text-xs text-pine mt-1 block font-bold">
+          <span className="inline-block rounded-full bg-mint text-[#14121F] border border-ink px-2 py-0.5 font-mono text-[10px] mt-1 font-bold">
             100% Transaksi Lunas
           </span>
         </div>
@@ -185,16 +185,16 @@ export default async function AdminDashboardPage() {
       {/* Chart + Live Orders Feed */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-7 items-start">
         {/* Left 6 cols: Simple Occupancy Bar Chart */}
-        <div className="xl:col-span-6 border-2 border-ink bg-card p-5 sm:p-6 poster-shadow">
+        <div className="xl:col-span-6 rounded-xl border-2 border-ink bg-card p-5 sm:p-6 poster-shadow">
           <div className="flex items-center justify-between border-b-2 border-dashed border-ink/25 pb-4 mb-5">
             <div className="flex items-center gap-2.5">
-              <TrendingUp className="w-5 h-5 text-vermilion" />
+              <TrendingUp className="w-5 h-5 text-denim" />
               <div>
                 <h2 className="font-display text-xl font-extrabold tracking-tight">
                   Tingkat Keterisian Kuota Acara
                 </h2>
                 <p className="font-mono text-[11px] text-ink-muted">
-                  Perbandingan karcis terjual terhadap kapasitas kuota
+                  Perbandingan tiket terjual terhadap kapasitas kuota
                 </p>
               </div>
             </div>
@@ -214,11 +214,11 @@ export default async function AdminDashboardPage() {
                     {row.sold}/{row.quota} ({row.pct}%)
                   </span>
                 </div>
-                <div className="w-full h-4 border-2 border-ink bg-paper-subtle overflow-hidden">
+                <div className="w-full h-4 rounded-full border-2 border-ink bg-cloud-subtle overflow-hidden">
                   <div
                     style={{ width: `${Math.min(100, row.pct)}%` }}
                     className={`h-full transition-all ${
-                      row.pct >= 85 ? "bg-vermilion" : "bg-pine"
+                      row.pct >= 85 ? "bg-bubblegum" : "bg-denim"
                     }`}
                   />
                 </div>
@@ -235,4 +235,3 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
-

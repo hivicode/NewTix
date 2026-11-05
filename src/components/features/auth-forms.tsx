@@ -12,6 +12,7 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Y2KStarSticker } from "@/components/shared/y2k-stickers";
 import { AlertCircle, CheckCircle2, Github, Loader2 } from "lucide-react";
 
 const initialState: AuthActionState = {};
@@ -30,7 +31,9 @@ export function AuthForms({
   const [state, formAction, isPending] = useActionState(action, initialState);
   const [isGithubLoading, setIsGithubLoading] = React.useState(false);
   const [githubError, setGithubError] = React.useState<string | null>(
-    oauthError ? "Autentikasi GitHub gagal atau dibatalkan. Silakan coba lagi." : null
+    oauthError
+      ? "Autentikasi GitHub gagal atau dibatalkan. Silakan coba lagi."
+      : null
   );
 
   async function handleGithubLogin() {
@@ -65,26 +68,31 @@ export function AuthForms({
   }
 
   return (
-    <div className="border-2 border-ink bg-card p-6 sm:p-8 poster-shadow relative">
+    <div className="rounded-2xl border-2 border-ink bg-card p-6 sm:p-8 poster-shadow relative">
+      <Y2KStarSticker
+        className="w-6 h-6 absolute -top-3 -right-3 rotate-12"
+        color="#FF9ECF"
+      />
+
       {/* Top ticket header */}
       <div className="flex items-center justify-between border-b-2 border-dashed border-ink/25 pb-4 mb-6">
         <div>
-          <span className="font-mono text-[11px] uppercase tracking-widest text-vermilion font-bold block">
-            {mode === "login" ? "LOKET MASUK // ANGGOTA" : "CETAK KARTU ANGGOTA"}
+          <span className="font-mono text-[11px] uppercase tracking-widest text-denim font-bold block">
+            {mode === "login" ? "MEMBER PASS // MASUK" : "GABUNG NEWTIX CLUB"}
           </span>
           <h2 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight mt-0.5">
             {mode === "login" ? (
               <>
-                Selamat datang{" "}
-                <span className="font-serif italic font-normal text-vermilion">
-                  kembali.
+                Halo lagi,{" "}
+                <span className="font-serif italic font-semibold text-denim">
+                  teman konser!
                 </span>
               </>
             ) : (
               <>
                 Ambil{" "}
-                <span className="font-serif italic font-normal text-vermilion">
-                  karcis
+                <span className="font-serif italic font-semibold text-denim">
+                  tiket
                 </span>{" "}
                 pertamamu.
               </>
@@ -92,8 +100,8 @@ export function AuthForms({
           </h2>
         </div>
         <div className="hidden sm:flex flex-col items-end font-mono text-[10px] text-ink-muted">
-          <span>SERI: KRC-26</span>
-          <span>GATE: A1</span>
+          <span>SERI: NTX-26</span>
+          <span>VIP GATE</span>
         </div>
       </div>
 
@@ -101,7 +109,7 @@ export function AuthForms({
       {(state.error || githubError) && (
         <div
           role="alert"
-          className="mb-5 border-2 border-destructive bg-destructive/10 p-3.5 text-xs font-mono text-destructive flex items-start gap-2.5"
+          className="mb-5 rounded-md border-2 border-destructive bg-destructive/10 p-3.5 text-xs font-mono text-destructive flex items-start gap-2.5"
         >
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{state.error || githubError}</span>
@@ -111,7 +119,7 @@ export function AuthForms({
       {state.success && (
         <div
           role="status"
-          className="mb-5 border-2 border-pine bg-pine/10 p-3.5 text-xs font-mono text-pine flex items-start gap-2.5"
+          className="mb-5 rounded-md border-2 border-ink bg-mint text-[#14121F] p-3.5 text-xs font-mono flex items-start gap-2.5"
         >
           <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{state.success}</span>
@@ -156,7 +164,7 @@ export function AuthForms({
               id="fullName"
               name="fullName"
               type="text"
-              placeholder="Mis. Raka Pradipta"
+              placeholder="Mis. Nadia Putri"
               required
               autoComplete="name"
             />
@@ -215,9 +223,9 @@ export function AuthForms({
               Memproses...
             </>
           ) : mode === "login" ? (
-            "Masuk & Buka Loket"
+            "Masuk ke NewTix"
           ) : (
-            "Cetak Akun Sekarang"
+            "Buat Akun Member"
           )}
         </Button>
       </form>
@@ -225,14 +233,14 @@ export function AuthForms({
       <div className="mt-6 pt-4 border-t-2 border-dashed border-ink/25 text-center text-sm">
         {mode === "login" ? (
           <p className="text-ink-muted">
-            Belum punya akun KARCIS?{" "}
+            Belum punya akun NewTix?{" "}
             <Link
               href={`/register${
                 redirectTo !== "/"
                   ? `?redirect=${encodeURIComponent(redirectTo)}`
                   : ""
               }`}
-              className="font-bold text-ink underline decoration-vermilion decoration-2 underline-offset-4 hover:text-vermilion"
+              className="font-bold text-ink underline decoration-bubblegum decoration-2 underline-offset-4 hover:text-denim"
             >
               Daftar gratis di sini
             </Link>
@@ -246,7 +254,7 @@ export function AuthForms({
                   ? `?redirect=${encodeURIComponent(redirectTo)}`
                   : ""
               }`}
-              className="font-bold text-ink underline decoration-vermilion decoration-2 underline-offset-4 hover:text-vermilion"
+              className="font-bold text-ink underline decoration-bubblegum decoration-2 underline-offset-4 hover:text-denim"
             >
               Langsung masuk
             </Link>
@@ -256,4 +264,3 @@ export function AuthForms({
     </div>
   );
 }
-

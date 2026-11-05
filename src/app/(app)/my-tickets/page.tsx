@@ -8,6 +8,7 @@ import {
 import { FALLBACK_EVENTS } from "@/lib/fallback-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { BunnyMascot } from "@/components/shared/y2k-stickers";
 import {
   formatEventDate,
   formatEventTime,
@@ -16,8 +17,8 @@ import {
 } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Dompet Karcis Saya",
-  description: "Daftar karcis acara yang sudah kamu amankan di KARCIS.",
+  title: "Album Tiketku",
+  description: "Daftar tiket konser dan acara yang sudah kamu amankan di NewTix.",
 };
 
 interface MemberTicketRow {
@@ -104,7 +105,7 @@ export default async function MyTicketsPage() {
     tickets = [
       {
         id: "sample-ticket-1",
-        code: "KRC26SIM",
+        code: "NTX26SIM",
         checked_in_at: null,
         ticket_type_name: "Presale Gelombang 1",
         ticket_price: 125000,
@@ -121,16 +122,21 @@ export default async function MyTicketsPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
       <div className="border-b-2 border-ink pb-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-vermilion block">
-            ARSIP ANGGOTA // LOKET RESMI
-          </span>
-          <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mt-1">
-            Dompet{" "}
-            <span className="font-serif italic font-normal text-vermilion">
-              karcismu.
+        <div className="flex items-center gap-3.5">
+          <div className="rounded-full border-2 border-ink bg-butter p-2 poster-shadow-sm hidden sm:block">
+            <BunnyMascot mood="wink" className="w-11 h-11" />
+          </div>
+          <div>
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+              KOLEKSI TIKET MEMBER // NEWTIX
             </span>
-          </h1>
+            <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mt-1">
+              Album{" "}
+              <span className="font-serif italic font-semibold text-denim">
+                tiketmu.
+              </span>
+            </h1>
+          </div>
         </div>
 
         <Button asChild variant="outline">
@@ -139,17 +145,17 @@ export default async function MyTicketsPage() {
       </div>
 
       {tickets.length === 0 ? (
-        <div className="border-2 border-dashed border-ink bg-card p-12 text-center my-8">
-          <Ticket className="w-10 h-10 text-vermilion mx-auto mb-3 -rotate-12" />
+        <div className="rounded-2xl border-2 border-dashed border-ink bg-card p-12 text-center my-8">
+          <Ticket className="w-10 h-10 text-denim mx-auto mb-3 -rotate-12" />
           <h2 className="font-display text-2xl font-extrabold mb-2">
-            Dompet karcismu masih kosong.
+            Album tiketmu masih kosong nih!
           </h2>
           <p className="text-sm text-ink-muted max-w-md mx-auto mb-6">
-            Kamu belum memesan karcis apa pun. Jelajahi panggung musik,
-            lokakarya kreatif, atau diskusi teknologi minggu ini.
+            Yuk cari konser, lokakarya kreatif, atau diskusi seru minggu ini dan
+            kumpulkan tiket pertamamu.
           </p>
           <Button asChild>
-            <Link href="/events">Buka Loket Acara</Link>
+            <Link href="/events">Jelajahi Acara Seru</Link>
           </Button>
         </div>
       ) : (
@@ -159,12 +165,12 @@ export default async function MyTicketsPage() {
             return (
               <div
                 key={t.id}
-                className="flex flex-col md:flex-row border-2 border-ink bg-card poster-shadow ticket-notch-horizontal"
+                className="flex flex-col md:flex-row rounded-xl border-2 border-ink bg-card poster-shadow ticket-notch-horizontal"
               >
                 {/* Date Stub */}
-                <div className="md:w-28 shrink-0 bg-paper-subtle border-b-2 md:border-b-0 md:border-r-2 border-dashed border-ink/35 p-4 flex md:flex-col items-center justify-between text-center">
+                <div className="md:w-28 shrink-0 bg-cloud-subtle border-b-2 md:border-b-0 md:border-r-2 border-dashed border-ink/35 p-4 flex md:flex-col items-center justify-between text-center rounded-t-xl md:rounded-tr-none md:rounded-l-xl">
                   <div>
-                    <span className="font-mono text-xs font-bold text-vermilion block">
+                    <span className="font-mono text-xs font-bold text-denim block">
                       {stub.weekday}
                     </span>
                     <span className="font-display text-4xl font-extrabold text-ink leading-none">
@@ -183,11 +189,11 @@ export default async function MyTicketsPage() {
                 <div className="flex-1 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="mustard">{t.ticket_type_name}</Badge>
+                      <Badge variant="bubblegum">{t.ticket_type_name}</Badge>
                       {t.checked_in_at ? (
                         <Badge variant="ink">SUDAH CHECK-IN</Badge>
                       ) : (
-                        <Badge variant="pine">AKTIF // SIAP SCAN</Badge>
+                        <Badge variant="mint">AKTIF ★ SIAP SCAN</Badge>
                       )}
                       <span className="font-mono text-xs text-ink-muted">
                         {formatRupiah(t.ticket_price)}
@@ -198,19 +204,19 @@ export default async function MyTicketsPage() {
                       href={`/my-tickets/${t.code}`}
                       className="block group"
                     >
-                      <h2 className="font-display text-2xl font-extrabold tracking-tight group-hover:text-vermilion transition-colors">
+                      <h2 className="font-display text-2xl font-extrabold tracking-tight group-hover:text-denim transition-colors">
                         {t.event_title}
                       </h2>
                     </Link>
 
                     <div className="flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-xs text-ink-muted">
                       <span className="inline-flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-vermilion" />
+                        <Calendar className="w-3.5 h-3.5 text-denim" />
                         {formatEventDate(t.event_starts_at)} •{" "}
                         {formatEventTime(t.event_starts_at)}
                       </span>
                       <span className="inline-flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-vermilion" />
+                        <MapPin className="w-3.5 h-3.5 text-denim" />
                         {t.event_venue}, {t.event_city}
                       </span>
                     </div>
@@ -220,9 +226,9 @@ export default async function MyTicketsPage() {
                   <div className="sm:border-l-2 sm:border-dashed sm:border-ink/25 sm:pl-6 flex sm:flex-col items-center sm:items-end justify-between gap-3 shrink-0">
                     <div className="text-left sm:text-right">
                       <span className="font-mono text-[10px] uppercase tracking-widest text-ink-muted block">
-                        KODE KARCIS
+                        KODE TIKET
                       </span>
-                      <span className="font-mono text-xl font-extrabold tracking-wider text-ink">
+                      <span className="font-mono text-xl font-extrabold tracking-wider text-denim">
                         #{t.code}
                       </span>
                     </div>
@@ -244,4 +250,3 @@ export default async function MyTicketsPage() {
     </main>
   );
 }
-
