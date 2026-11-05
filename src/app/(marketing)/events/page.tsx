@@ -20,6 +20,7 @@ export default async function EventsDirectoryPage({
     category?: string;
     q?: string;
     city?: string;
+    tab?: string;
     page?: string;
   }>;
 }) {
@@ -27,6 +28,7 @@ export default async function EventsDirectoryPage({
   const currentCategory = params.category || "";
   const currentQuery = params.q || "";
   const currentCity = params.city || "";
+  const currentTab = params.tab || "all";
   const currentPage = Math.max(1, Number(params.page || "1") || 1);
 
   const [categories, result] = await Promise.all([
@@ -35,17 +37,27 @@ export default async function EventsDirectoryPage({
       category: currentCategory,
       q: currentQuery,
       city: currentCity,
+      tab: currentTab,
       page: currentPage,
       pageSize: 6,
     }),
   ]);
 
-  const cities = ["Bandung", "Jakarta", "Yogyakarta", "Surabaya", "Denpasar"];
+  const cities = [
+    "Jakarta",
+    "Bandung",
+    "Banyuwangi",
+    "Seoul",
+    "Tokyo",
+    "Osaka",
+    "Fukuoka",
+  ];
 
   function buildFilterHref(overrides: {
     category?: string;
     q?: string;
     city?: string;
+    tab?: string;
     page?: number;
   }) {
     const sp = new URLSearchParams();
@@ -53,8 +65,10 @@ export default async function EventsDirectoryPage({
       overrides.category !== undefined ? overrides.category : currentCategory;
     const q = overrides.q !== undefined ? overrides.q : currentQuery;
     const city = overrides.city !== undefined ? overrides.city : currentCity;
+    const tab = overrides.tab !== undefined ? overrides.tab : currentTab;
     const page = overrides.page !== undefined ? overrides.page : 1;
 
+    if (tab && tab !== "all") sp.set("tab", tab);
     if (cat) sp.set("category", cat);
     if (q) sp.set("q", q);
     if (city) sp.set("city", city);
@@ -65,7 +79,7 @@ export default async function EventsDirectoryPage({
   }
 
   const hasActiveFilters = Boolean(
-    currentCategory || currentQuery || currentCity
+    currentCategory || currentQuery || currentCity || (currentTab && currentTab !== "all")
   );
 
   return (
@@ -90,6 +104,9 @@ export default async function EventsDirectoryPage({
           method="GET"
           className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto"
         >
+          {currentTab && currentTab !== "all" && (
+            <input type="hidden" name="tab" value={currentTab} />
+          )}
           {currentCategory && (
             <input type="hidden" name="category" value={currentCategory} />
           )}
@@ -102,12 +119,51 @@ export default async function EventsDirectoryPage({
               type="search"
               name="q"
               defaultValue={currentQuery}
-              placeholder="Cari judul gigs, venue, atau kota..."
+              placeholder="Cari Bunnies Camp, gathering, festival..."
               className="pl-10"
             />
           </div>
           <Button type="submit">Cari Tiket</Button>
         </form>
+      </div>
+
+      {/* Tab Filter Utama: Semua / Akan Datang (Fan-made) / Arsip */}
+      <div className="mb-6 flex flex-wrap items-center gap-2.5 p-1.5 rounded-2xl border-2 border-ink bg-card poster-shadow-sm w-fit">
+        <Link
+          href={buildFilterHref({ tab: "all", page: 1 })}
+          className={cn(
+            "px-4 py-2 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-2",
+            currentTab === "all" || !currentTab
+              ? "bg-denim text-white border-2 border-ink poster-shadow-sm"
+              : "text-ink hover:bg-cloud-subtle"
+          )}
+        >
+          <span>Semua Acara</span>
+        </Link>
+
+        <Link
+          href={buildFilterHref({ tab: "upcoming", page: 1 })}
+          className={cn(
+            "px-4 py-2 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-2",
+            currentTab === "upcoming"
+              ? "bg-bubblegum text-[#14121F] border-2 border-ink poster-shadow-sm"
+              : "text-ink hover:bg-cloud-subtle"
+          )}
+        >
+          <span>💙 Akan Datang (Fan-made)</span>
+        </Link>
+
+        <Link
+          href={buildFilterHref({ tab: "archive", page: 1 })}
+          className={cn(
+            "px-4 py-2 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-2",
+            currentTab === "archive"
+              ? "bg-butter text-[#14121F] border-2 border-ink poster-shadow-sm"
+              : "text-ink hover:bg-cloud-subtle"
+          )}
+        >
+          <span>🏆 Arsip Resmi (Ended)</span>
+        </Link>
       </div>
 
       {/* Category & City Filter Pills (URL as State) */}

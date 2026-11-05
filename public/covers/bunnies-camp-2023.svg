@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9ECF" />
+      <stop offset="50%" stop-color="#ECE8FA" />
+      <stop offset="100%" stop-color="#3F6FD9" />
+    </linearGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(20,18,31,0.08)" stroke-width="1.5" />
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#bg1)" />
+  <rect width="800" height="500" fill="url(#grid)" />
+
+  <!-- Inner Photobooth Frame -->
+  <rect x="30" y="30" width="740" height="440" rx="16" fill="#FFFFFF" fill-opacity="0.9" stroke="#14121F" stroke-width="3" />
+  <rect x="42" y="42" width="716" height="416" rx="10" fill="none" stroke="#14121F" stroke-width="1.5" stroke-dasharray="6 6" />
+
+  <!-- Decorative Y2K Bunny Silhouette & Stars -->
+  <g transform="translate(110, 150)">
+    <!-- Bunny Head & Ears -->
+    <path d="M 40 80 C 15 80 5 110 5 140 C 5 175 25 195 65 195 C 105 195 125 175 125 140 C 125 110 115 80 90 80 Z" fill="#FFE98A" stroke="#14121F" stroke-width="3"/>
+    <path d="M 32 90 C 20 50 15 15 35 10 C 50 5 55 45 52 85 Z" fill="#FFE98A" stroke="#14121F" stroke-width="3"/>
+    <path d="M 32 75 C 24 50 22 25 35 20 C 44 16 48 45 46 72 Z" fill="#FF9ECF" />
+    <path d="M 98 90 C 110 50 115 15 95 10 C 80 5 75 45 78 85 Z" fill="#FFE98A" stroke="#14121F" stroke-width="3"/>
+    <path d="M 98 75 C 106 50 108 25 95 20 C 86 16 82 45 84 72 Z" fill="#FF9ECF" />
+    <circle cx="45" cy="135" r="4.5" fill="#14121F" />
+    <circle cx="85" cy="135" r="4.5" fill="#14121F" />
+    <ellipse cx="65" cy="146" rx="5" ry="3.5" fill="#FF9ECF" stroke="#14121F" stroke-width="1.5" />
+    <path d="M 58 152 Q 65 158 72 152" fill="none" stroke="#14121F" stroke-width="2" stroke-linecap="round" />
+  </g>
+
+  <!-- Title & Text Layout -->
+  <g transform="translate(290, 150)">
+    <!-- Pill Badge -->
+    <rect x="0" y="0" width="165" height="28" rx="14" fill="#3F6FD9" stroke="#14121F" stroke-width="2" />
+    <text x="82" y="18" font-family="monospace" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">FAN MEETING // 2023</text>
+
+    <!-- Main Title -->
+    <text x="0" y="80" font-family="'Impact', 'Arial Black', sans-serif" font-size="52" font-weight="900" fill="#14121F" letter-spacing="-1">BUNNIES CAMP</text>
+    <text x="0" y="112" font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#3F6FD9" letter-spacing="2">★ 1-2 JULI 2023 ★ SEOUL</text>
+    <text x="0" y="140" font-family="sans-serif" font-size="13" fill="#585470">SK Olympic Handball Gymnasium</text>
+    <text x="0" y="162" font-family="'Courier New', monospace" font-size="12" font-weight="bold" fill="#14121F">ARSIP RESMI NEWTIX • TIKET SOLD OUT</text>
+  </g>
+
+  <!-- Y2K Decorative Stars -->
+  <path d="M 690 90 L 696 104 L 710 110 L 696 116 L 690 130 L 684 116 L 670 110 L 684 104 Z" fill="#FFE98A" stroke="#14121F" stroke-width="2" />
+  <path d="M 120 70 L 124 80 L 135 84 L 124 88 L 120 98 L 116 88 L 105 84 L 116 80 Z" fill="#9FE8C8" stroke="#14121F" stroke-width="2" />
+  <path d="M 720 370 L 725 382 L 738 387 L 725 392 L 720 405 L 715 392 L 702 387 L 715 382 Z" fill="#FF9ECF" stroke="#14121F" stroke-width="2" />
+
+  <!-- Bottom Photobooth Info Bar -->
+  <rect x="30" y="420" width="740" height="50" rx="0 0 16 16" fill="#14121F" />
+  <text x="55" y="450" font-family="monospace" font-size="11" fill="#FFE98A" font-weight="bold" letter-spacing="2">PHOTOBOOTH ARCHIVE SNAPSHOT // MEMORY 01</text>
+  <text x="745" y="450" font-family="monospace" font-size="11" fill="#FFFFFF" text-anchor="end" letter-spacing="1">NEWTIX ARCHIVE VERIFIED</text>
+</svg>

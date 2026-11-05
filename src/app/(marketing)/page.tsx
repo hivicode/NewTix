@@ -48,11 +48,10 @@ export default async function LandingPage() {
             </h1>
 
             <p className="text-base sm:text-lg text-ink-muted max-w-xl leading-relaxed">
-              Mau nyanyi bareng di gigs akhir pekan, ikutan kelas cetak zine,
-              atau nongkrong di pasar kopi? Di{" "}
-              <strong className="text-ink">NewTix</strong>, kamu nggak perlu
-              rebutan lawan bot. Pilih acaranya, simpan tiket lucumu, dan sampai
-              ketemu di depan panggung!
+              Arsip memorabilia fan meeting resmi, panggung festival internasional,
+              hingga temu komunitas bertema Y2K &amp; photobooth. Di{" "}
+              <strong className="text-ink">NewTix</strong>, jelajahi arsip berharga
+              dan amankan tiket kumpul komunitas favoritmu!
             </p>
 
             <div className="flex flex-wrap items-center gap-3.5 pt-2">
@@ -136,6 +135,7 @@ export default async function LandingPage() {
                         alt={heroSpotlight.title}
                         fill
                         priority
+                        unoptimized={heroSpotlight.cover_url.startsWith("/") || heroSpotlight.cover_url.endsWith(".svg")}
                         sizes="(max-width: 1024px) 100vw, 42vw"
                         className="object-cover"
                       />
@@ -216,7 +216,7 @@ export default async function LandingPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {categories.map((cat, i) => (
             <Link
               key={cat.id}

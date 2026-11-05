@@ -23,16 +23,17 @@
 1. Buka [https://supabase.com/dashboard](https://supabase.com/dashboard) dan buat project baru.
 2. Catat **Project URL** dan **anon / public key** dari menu **Project Settings → API**.
 
-### 2. Jalankan Skema Database & Seed Data (`supabase/schema.sql`)
+### 2. Jalankan Skema Database & Seed Data
 1. Di dashboard Supabase, buka menu **SQL Editor → New Query**.
-2. Salin seluruh isi file [`supabase/schema.sql`](./supabase/schema.sql) lalu klik **Run**.
-3. Skrip ini otomatis membuat:
-   - 6 tabel (`profiles`, `categories`, `events`, `ticket_types`, `orders`, `tickets`) beserta UUID primary key, foreign key, constraint (`remaining >= 0 AND remaining <= quota`), dan index.
+2. Salin seluruh isi file [`supabase/schema.sql`](./supabase/schema.sql) lalu klik **Run** untuk membuat tabel, RLS, trigger, dan RPC anti-oversell.
+3. Jalankan file [`supabase/seed-newtix.sql`](./supabase/seed-newtix.sql) untuk mengimpor data seed NewJeans Archive (4 event arsip status ended: *Bunnies Camp*, *Bunnies Camp 2024 Tokyo Dome*, *Music Bank Global Festival 2024*, *The Fact Music Awards 2024*) dan 3 event komunitas fan-made (*Bunnies Gathering Jakarta*, *Y2K Fit Check Market Bandung*, *Photocard Swap & Craft Day Banyuwangi*).
+4. Skrip ini otomatis menyediakan:
+   - 6 tabel (`profiles`, `categories`, `events`, `ticket_types`, `orders`, `tickets`) beserta constraint (`remaining >= 0 AND remaining <= quota`), dan index.
    - Trigger otomatis `on_auth_user_created` yang membuat baris di `profiles` saat user baru mendaftar.
    - Fungsi RPC `purchase_tickets(p_ticket_type_id uuid, p_qty int)` dengan `SECURITY DEFINER` dan `SELECT ... FOR UPDATE` untuk mencegah overselling.
    - Row Level Security (RLS) penuh di semua tabel.
    - Publikasi Supabase Realtime untuk tabel `ticket_types` dan `orders`.
-   - Seed data: 5 kategori dan 8 acara bertema Indonesia beserta 2–3 jenis tiket tiap acara.
+   - Seed data: 4 kategori (Fan Meeting, Festival & Awards, Fan-made Event, Workshop Kreatif) dan 7 event kurasi.
 
 ### 3. Aktifkan Autentikasi Email & GitHub OAuth
 1. Di dashboard Supabase, buka **Authentication → Providers → Email**. Untuk kemudahan pengujian lokal, kamu bisa menonaktifkan *"Confirm email"* agar pendaftaran langsung masuk.
@@ -106,3 +107,7 @@ where id = (
 2. **Pembayaran Simulasi**: Sesuai spesifikasi, transaksi langsung berstatus `paid` di dalam fungsi RPC `purchase_tickets` tanpa payment gateway pihak ketiga.
 3. **Bundler Build**: Skrip `npm run build` menggunakan `next build --webpack` untuk memastikan kestabilan pemrosesan worker PostCSS Tailwind v4.
 4. **Simpan Tiket**: Tombol *"Simpan sebagai Gambar / PDF"* pada halaman tiket digital (`/my-tickets/[code]`) memanggil dialog cetak native browser (`window.print()`) dengan stylesheet `@media print` yang menyembunyikan tombol navigasi.
+
+---
+
+> **Catatan & Disclaimer**: NewTix adalah proyek belajar. Data event asli diambil dari informasi publik dan hanya sebagai arsip. Event bertanda Fan-made bersifat fiktif. Tidak berafiliasi dengan artis atau agensi mana pun.

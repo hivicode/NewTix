@@ -110,6 +110,7 @@ export default async function EventDetailPage({
                       alt={event.title}
                       fill
                       priority
+                      unoptimized={event.cover_url.startsWith("/") || event.cover_url.endsWith(".svg")}
                       sizes="(max-width: 1024px) 100vw, 58vw"
                       className="object-cover"
                     />
@@ -180,7 +181,113 @@ export default async function EventDetailPage({
                 <p className="text-base text-ink leading-relaxed whitespace-pre-line">
                   {event.description}
                 </p>
+
+                {/* Badge Penjelas Fan-made jika event fiktif */}
+                {event.title.includes("Fan-made") && (
+                  <div className="mt-4 p-3.5 rounded-xl border-2 border-dashed border-denim bg-cloud-subtle font-mono text-xs text-ink space-y-1">
+                    <p className="font-bold text-denim uppercase tracking-wider flex items-center gap-1.5">
+                      <span>💙</span>
+                      <span>Pemberitahuan Event Fan-Made</span>
+                    </p>
+                    <p className="text-ink-muted">
+                      Acara bertanda <strong>Fan-made</strong> bersifat fiktif dan diinisiasi oleh komunitas. Tidak berafiliasi dengan artis atau agensi mana pun.
+                    </p>
+                  </div>
+                )}
               </div>
+
+              {/* Timeline Singkat Arsip (2023 -> 2024) Khusus Event Asli */}
+              {event.status === "ended" && (
+                <div className="mt-8 pt-6 border-t-2 border-dashed border-ink/25 space-y-5">
+                  <div className="flex items-center justify-between">
+                    <h2 className="font-mono text-xs font-bold uppercase tracking-widest text-denim">
+                      TIMELINE ARSIP RESMI // 2023 ➔ 2024
+                    </h2>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
+                      DATA PUBLIK TERVERIFIKASI
+                    </span>
+                  </div>
+
+                  <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:border-l-2 before:border-dashed before:border-ink/30">
+                    {[
+                      {
+                        year: "2023",
+                        date: "1-2 Juli 2023",
+                        title: "Bunnies Camp",
+                        venue: "SK Olympic Handball Gymnasium, Seoul",
+                        note: "Fan meeting pertama NewJeans. Tiket sold out.",
+                        slug: "bunnies-camp",
+                      },
+                      {
+                        year: "2024",
+                        date: "26-27 Juni 2024",
+                        title: "Bunnies Camp 2024 Tokyo Dome",
+                        venue: "Tokyo Dome, Tokyo",
+                        note: "Fan meeting kedua dan penampilan solo pertama di Jepang. Bintang tamu: YOASOBI dan Rina Sawayama.",
+                        slug: "bunnies-camp-2024-tokyo-dome",
+                      },
+                      {
+                        year: "2024",
+                        date: "8 September 2024",
+                        title: "The Fact Music Awards 2024",
+                        venue: "Kyocera Dome, Osaka",
+                        note: "Penampilan sebagai bagian dari acara penghargaan.",
+                        slug: "the-fact-music-awards-2024",
+                      },
+                      {
+                        year: "2024",
+                        date: "14 Desember 2024",
+                        title: "Music Bank Global Festival 2024",
+                        venue: "Fukuoka Dome, Fukuoka",
+                        note: "Penampilan sebagai bagian dari festival, bukan konser tunggal.",
+                        slug: "music-bank-global-festival-2024",
+                      },
+                    ].map((item, idx) => {
+                      const isCurrent = item.slug === event.slug;
+                      return (
+                        <div key={idx} className="relative group">
+                          {/* Dot pin */}
+                          <div
+                            className={`absolute -left-[23px] top-1.5 h-3.5 w-3.5 rounded-full border-2 border-ink ${
+                              isCurrent ? "bg-[#E11D48]" : "bg-butter"
+                            }`}
+                          />
+                          <div
+                            className={`rounded-xl border-2 border-ink p-3.5 transition-all ${
+                              isCurrent
+                                ? "bg-card poster-shadow-sm border-denim"
+                                : "bg-cloud-subtle/50 hover:bg-card"
+                            }`}
+                          >
+                            <div className="flex flex-wrap items-center justify-between gap-1 mb-1 font-mono text-[11px]">
+                              <span className="font-bold text-denim">
+                                {item.date}
+                              </span>
+                              <span className="text-ink-muted">
+                                {item.venue}
+                              </span>
+                            </div>
+                            <Link
+                              href={`/events/${item.slug}`}
+                              className="font-display font-bold text-sm text-ink hover:text-denim inline-flex items-center gap-1.5"
+                            >
+                              <span>{item.title}</span>
+                              {isCurrent && (
+                                <span className="font-mono text-[10px] uppercase font-bold text-[#E11D48] bg-cloud px-2 py-0.5 rounded border border-ink">
+                                  Halaman Ini
+                                </span>
+                              )}
+                            </Link>
+                            <p className="mt-1 font-mono text-xs text-ink-muted">
+                              {item.note}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Venue Rules Footer */}
               <div className="mt-8 pt-6 border-t-2 border-dashed border-ink/25 grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs text-ink-muted">

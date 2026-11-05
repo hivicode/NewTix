@@ -10,6 +10,7 @@ import {
   formatEventTime,
   formatRupiah,
   formatStubDate,
+  cn,
 } from "@/lib/utils";
 import type { EventItem } from "@/types/database";
 
@@ -30,12 +31,13 @@ export function TicketEventCard({ event, index = 0 }: TicketEventCardProps) {
       ? Math.min(...ticketTypes.map((t) => t.price))
       : 0;
 
-  const isSoldOut = ticketTypes.length > 0 && totalRemaining === 0;
+  const isArchive = event.status === "ended";
+  const isSoldOut = isArchive || (ticketTypes.length > 0 && totalRemaining === 0);
   const isAlmostSoldOut =
     !isSoldOut &&
     totalQuota > 0 &&
     totalRemaining / totalQuota < 0.18;
-  const isFree = ticketTypes.some((t) => t.price === 0);
+  const isFree = !isArchive && ticketTypes.some((t) => t.price === 0);
 
   return (
     <motion.article
@@ -56,28 +58,44 @@ export function TicketEventCard({ event, index = 0 }: TicketEventCardProps) {
               transition: { type: "spring", stiffness: 400, damping: 22 },
             }
       }
-      className="group relative flex flex-col sm:flex-row rounded-xl border-2 border-ink bg-card poster-shadow ticket-notch-horizontal transition-colors"
+      className={cn(
+        "group relative flex flex-col sm:flex-row rounded-xl border-2 border-ink poster-shadow ticket-notch-horizontal transition-all",
+        isArchive ? "bg-cloud-subtle/70 opacity-90" : "bg-card"
+      )}
     >
+      {/* Rubber Stamp Miring untuk Event Arsip */}
+      {isArchive && (
+        <div className="absolute top-2 right-3 sm:top-3 sm:right-4 z-30 pointer-events-none rotate-[-10deg] select-none">
+          <div className="border-2 border-dashed border-[#E11D48] bg-card/95 px-2.5 py-1 rounded shadow-sm">
+            <span className="font-mono text-[10px] sm:text-xs font-black tracking-widest text-[#E11D48] uppercase">
+              ★ ARSIP • SOLD OUT ★
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Sticker Badge (Rotated -6deg) */}
-      <div className="absolute -top-3.5 right-4 z-20 flex items-center gap-1.5">
-        {isSoldOut ? (
-          <Badge variant="ink" sticker>
-            SOLD OUT
-          </Badge>
-        ) : isAlmostSoldOut ? (
-          <Badge variant="bubblegum" sticker>
-            HAMPIR HABIS • SISA {totalRemaining}
-          </Badge>
-        ) : isFree ? (
-          <Badge variant="mint" sticker>
-            GRATIS!
-          </Badge>
-        ) : (
-          <Badge variant="butter" sticker>
-            MASIH ADA
-          </Badge>
-        )}
-      </div>
+      {!isArchive && (
+        <div className="absolute -top-3.5 right-4 z-20 flex items-center gap-1.5">
+          {isSoldOut ? (
+            <Badge variant="ink" sticker>
+              SOLD OUT
+            </Badge>
+          ) : isAlmostSoldOut ? (
+            <Badge variant="bubblegum" sticker>
+              HAMPIR HABIS • SISA {totalRemaining}
+            </Badge>
+          ) : isFree ? (
+            <Badge variant="mint" sticker>
+              GRATIS!
+            </Badge>
+          ) : (
+            <Badge variant="butter" sticker>
+              MASIH ADA
+            </Badge>
+          )}
+        </div>
+      )}
 
       {/* Left Vertical Date Stub */}
       <div className="sm:w-24 shrink-0 bg-cloud-subtle border-b-2 sm:border-b-0 sm:border-r-2 border-dashed border-ink/35 p-3.5 sm:p-4 flex sm:flex-col items-center justify-between text-center rounded-t-xl sm:rounded-tr-none sm:rounded-l-xl">
@@ -120,6 +138,7 @@ export function TicketEventCard({ event, index = 0 }: TicketEventCardProps) {
                   src={event.cover_url}
                   alt={event.title}
                   fill
+                  unoptimized={event.cover_url.startsWith("/") || event.cover_url.endsWith(".svg")}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover/photo:scale-105"
                 />
@@ -159,18 +178,26 @@ export function TicketEventCard({ event, index = 0 }: TicketEventCardProps) {
         <div className="mt-4 pt-3.5 border-t-2 border-dashed border-ink/25 flex items-end justify-between gap-2">
           <div>
             <span className="block font-mono text-[10px] uppercase tracking-widest text-ink-muted">
-              TIKET MULAI
+              {isArchive ? "STATUS DOKUMEN" : "TIKET MULAI"}
             </span>
-            <span className="font-mono text-base font-extrabold text-ink">
-              {formatRupiah(lowestPrice)}
+            <span className={cn(
+              "font-mono text-base font-extrabold",
+              isArchive ? "text-[#E11D48] text-sm sm:text-base" : "text-ink"
+            )}>
+              {isArchive ? "ARSIP • SOLD OUT" : formatRupiah(lowestPrice)}
             </span>
           </div>
 
           <Link
             href={`/events/${event.slug}`}
-            className="inline-flex items-center gap-1.5 rounded-md border-2 border-ink bg-denim text-white px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-wider poster-shadow-sm hover:bg-denim-hover transition-colors min-h-[40px]"
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-md border-2 border-ink px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-wider poster-shadow-sm transition-colors min-h-[40px]",
+              isArchive
+                ? "bg-cloud-subtle text-ink hover:bg-card"
+                : "bg-denim text-white hover:bg-denim-hover"
+            )}
           >
-            <span>{isSoldOut ? "Lihat Detail" : "Ambil Tiket"}</span>
+            <span>{isArchive ? "Lihat Arsip" : isSoldOut ? "Lihat Detail" : "Ambil Tiket"}</span>
             <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>

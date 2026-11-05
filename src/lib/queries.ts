@@ -58,8 +58,14 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getFeaturedEvents(limit = 6): Promise<EventItem[]> {
+  const getFallbackFeatured = () => {
+    const published = FALLBACK_EVENTS.filter((e) => e.status === "published");
+    const ended = FALLBACK_EVENTS.filter((e) => e.status === "ended");
+    return [...published, ...ended].slice(0, limit);
+  };
+
   if (!isServerSupabaseConfigured()) {
-    return FALLBACK_EVENTS.slice(0, limit);
+    return getFallbackFeatured();
   }
 
   try {
@@ -67,16 +73,16 @@ export async function getFeaturedEvents(limit = 6): Promise<EventItem[]> {
     const { data, error } = await supabase
       .from("events")
       .select("*, categories(*), ticket_types(*)")
-      .eq("status", "published")
-      .order("starts_at", { ascending: true })
+      .in("status", ["published", "ended"])
+      .order("starts_at", { ascending: false })
       .limit(limit);
 
     if (error || !data || data.length === 0) {
-      return FALLBACK_EVENTS.slice(0, limit);
+      return getFallbackFeatured();
     }
     return data as EventItem[];
   } catch {
-    return FALLBACK_EVENTS.slice(0, limit);
+    return getFallbackFeatured();
   }
 }
 
@@ -84,6 +90,7 @@ export async function getFilteredEvents(params: {
   category?: string;
   q?: string;
   city?: string;
+  tab?: string;
   page?: number;
   pageSize?: number;
 }): Promise<{
@@ -97,10 +104,20 @@ export async function getFilteredEvents(params: {
   const categorySlug = params.category?.trim() || "";
   const searchQuery = params.q?.trim().toLowerCase() || "";
   const cityFilter = params.city?.trim().toLowerCase() || "";
+  const tabFilter = params.tab?.trim().toLowerCase() || "all";
 
   const filterFallback = () => {
     const filtered = FALLBACK_EVENTS.filter((ev) => {
-      if (ev.status !== "published") return false;
+      if (tabFilter === "archive" && ev.status !== "ended") return false;
+      if (tabFilter === "upcoming" && ev.status !== "published") return false;
+      if (
+        tabFilter !== "archive" &&
+        tabFilter !== "upcoming" &&
+        ev.status !== "published" &&
+        ev.status !== "ended"
+      ) {
+        return false;
+      }
       if (categorySlug && ev.categories?.slug !== categorySlug) return false;
       if (cityFilter && ev.city.toLowerCase() !== cityFilter) return false;
       if (
@@ -112,6 +129,21 @@ export async function getFilteredEvents(params: {
         return false;
       }
       return true;
+    });
+
+    // Sort order: jika arsip, urutkan tanggal terbaru ke terlama; jika upcoming, urutkan terdekat
+    filtered.sort((a, b) => {
+      if (tabFilter === "archive") {
+        return new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime();
+      }
+      if (tabFilter === "upcoming") {
+        return new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime();
+      }
+      // "all": published dulu baru ended
+      if (a.status !== b.status) {
+        return a.status === "published" ? -1 : 1;
+      }
+      return new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime();
     });
 
     const totalCount = filtered.length;
@@ -148,9 +180,15 @@ export async function getFilteredEvents(params: {
 
     let query = supabase
       .from("events")
-      .select("*, categories(*), ticket_types(*)", { count: "exact" })
-      .eq("status", "published")
-      .order("starts_at", { ascending: true });
+      .select("*, categories(*), ticket_types(*)", { count: "exact" });
+
+    if (tabFilter === "archive") {
+      query = query.eq("status", "ended").order("starts_at", { ascending: false });
+    } else if (tabFilter === "upcoming") {
+      query = query.eq("status", "published").order("starts_at", { ascending: true });
+    } else {
+      query = query.in("status", ["published", "ended"]).order("starts_at", { ascending: false });
+    }
 
     if (categoryIdFilter) {
       query = query.eq("category_id", categoryIdFilter);

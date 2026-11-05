@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE98A" />
+      <stop offset="50%" stop-color="#FF9ECF" />
+      <stop offset="100%" stop-color="#3F6FD9" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#bg4)" />
+
+  <rect x="30" y="30" width="740" height="440" rx="16" fill="#FFFFFF" fill-opacity="0.94" stroke="#14121F" stroke-width="3" />
+  <rect x="42" y="42" width="716" height="416" rx="10" fill="none" stroke="#14121F" stroke-width="1.5" stroke-dasharray="6 6" />
+
+  <!-- Left Graphic: Ribbon Medal Emblem -->
+  <g transform="translate(100, 140)">
+    <rect x="0" y="0" width="150" height="190" rx="12" fill="#ECE8FA" stroke="#14121F" stroke-width="3" />
+    <circle cx="75" cy="70" r="38" fill="#FFE98A" stroke="#14121F" stroke-width="2.5" />
+    <circle cx="75" cy="70" r="28" fill="#FFFFFF" stroke="#14121F" stroke-width="1.5" stroke-dasharray="3 3" />
+    <text x="75" y="76" font-family="'Courier New', monospace" font-size="16" font-weight="900" fill="#14121F" text-anchor="middle">TMA</text>
+    <path d="M 55 105 L 45 155 L 75 140 L 105 155 L 95 105 Z" fill="#3F6FD9" stroke="#14121F" stroke-width="2" />
+    <text x="75" y="175" font-family="'Courier New', monospace" font-size="10" font-weight="bold" fill="#14121F" text-anchor="middle">AWARDS</text>
+  </g>
+
+  <g transform="translate(285, 135)">
+    <rect x="0" y="0" width="220" height="28" rx="14" fill="#9FE8C8" stroke="#14121F" stroke-width="2" />
+    <text x="110" y="18" font-family="monospace" font-size="11" font-weight="bold" fill="#14121F" text-anchor="middle" letter-spacing="2">CEREMONY &amp; AWARDS // 2024</text>
+
+    <text x="0" y="68" font-family="'Impact', 'Arial Black', sans-serif" font-size="38" font-weight="900" fill="#14121F" letter-spacing="-1">THE FACT MUSIC</text>
+    <text x="0" y="105" font-family="'Impact', 'Arial Black', sans-serif" font-size="34" font-weight="900" fill="#3F6FD9">AWARDS 2024</text>
+
+    <text x="0" y="136" font-family="'Courier New', monospace" font-size="13" font-weight="bold" fill="#14121F" letter-spacing="1">★ 8 SEPTEMBER 2024 ★ KYOCERA DOME</text>
+    <text x="0" y="162" font-family="sans-serif" font-size="12" fill="#585470">Osaka, Jepang • Penampilan sebagai bagian dari acara penghargaan</text>
+    <text x="0" y="184" font-family="'Courier New', monospace" font-size="11" font-weight="bold" fill="#E11D48">STATUS: ARSIP • BUKAN KONSER TUNGGAL</text>
+  </g>
+
+  <!-- Stars -->
+  <path d="M 700 80 L 706 95 L 721 101 L 706 107 L 700 122 L 694 107 L 679 101 L 694 95 Z" fill="#FFE98A" stroke="#14121F" stroke-width="2" />
+  <path d="M 720 340 L 725 352 L 738 357 L 725 362 L 720 375 L 715 362 L 702 357 L 715 352 Z" fill="#FF9ECF" stroke="#14121F" stroke-width="2" />
+
+  <rect x="30" y="420" width="740" height="50" rx="0 0 16 16" fill="#14121F" />
+  <text x="55" y="450" font-family="monospace" font-size="11" fill="#FFE98A" font-weight="bold" letter-spacing="2">THE FACT MUSIC AWARDS // OSAKA KYOCERA DOME</text>
+  <text x="745" y="450" font-family="monospace" font-size="11" fill="#FFFFFF" text-anchor="end" letter-spacing="1">NEWTIX ARCHIVE VERIFIED</text>
+</svg>
