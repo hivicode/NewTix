@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --paper: #F4EFE6;
+  --paper-subtle: #EAE3D5;
+  --ink: #141210;
+  --ink-muted: #57524C;
+  --vermilion: #FF4F1F;
+  --vermilion-hover: #E03E12;
+  --mustard: #F2B705;
+  --pine: #1F6F54;
+  --line: rgba(20, 18, 16, 0.16);
+  --line-strong: rgba(20, 18, 16, 0.35);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #FAF7F2;
+  --card-foreground: var(--ink);
+  --popover: #FAF7F2;
+  --popover-foreground: var(--ink);
+  --primary: var(--vermilion);
+  --primary-foreground: #FAF7F2;
+  --secondary: var(--paper-subtle);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-subtle);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--mustard);
+  --accent-foreground: var(--ink);
+  --destructive: #D92D20;
+  --destructive-foreground: #FAF7F2;
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--vermilion);
+  --radius: 0.25rem;
+}
+
+.dark {
+  --paper: #141210;
+  --paper-subtle: #1E1B18;
+  --ink: #F4EFE6;
+  --ink-muted: #A39B8F;
+  --vermilion: #FF4F1F;
+  --vermilion-hover: #FF683E;
+  --mustard: #F2B705;
+  --pine: #288F6C;
+  --line: rgba(244, 239, 230, 0.15);
+  --line-strong: rgba(244, 239, 230, 0.32);
+
+  --background: #141210;
+  --foreground: #F4EFE6;
+  --card: #1C1916;
+  --card-foreground: #F4EFE6;
+  --popover: #1C1916;
+  --popover-foreground: #F4EFE6;
+  --primary: #FF4F1F;
+  --primary-foreground: #141210;
+  --secondary: #25211D;
+  --secondary-foreground: #F4EFE6;
+  --muted: #25211D;
+  --muted-foreground: #A39B8F;
+  --accent: #F2B705;
+  --accent-foreground: #141210;
+  --destructive: #F04438;
+  --destructive-foreground: #F4EFE6;
+  --border: rgba(244, 239, 230, 0.15);
+  --input: rgba(244, 239, 230, 0.28);
+  --ring: #FF4F1F;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-subtle: var(--paper-subtle);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-vermilion: var(--vermilion);
+  --color-vermilion-hover: var(--vermilion-hover);
+  --color-mustard: var(--mustard);
+  --color-pine: var(--pine);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-display: var(--font-bricolage), sans-serif;
+  --font-sans: var(--font-bricolage), sans-serif;
+  --font-serif: var(--font-instrument-serif), serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    selection-background-color: var(--vermilion);
+    selection-color: #FAF7F2;
+  }
+
+  ::selection {
+    background-color: var(--vermilion);
+    color: #FAF7F2;
+  }
+}
+
+/* Ticket Perforation & Neo-brutalist Print Utilities */
+.ticket-notch-horizontal {
+  position: relative;
+}
+
+.ticket-notch-horizontal::before,
+.ticket-notch-horizontal::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: var(--background);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 9999px;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.ticket-notch-horizontal::before {
+  left: -11px;
+  clip-path: inset(0 0 0 50%);
+}
+
+.ticket-notch-horizontal::after {
+  right: -11px;
+  clip-path: inset(0 50% 0 0);
+}
+
+.sticker-shadow {
+  box-shadow: 3px 3px 0px var(--ink);
+}
+
+.dark .sticker-shadow {
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.85);
+}
+
+.poster-shadow {
+  box-shadow: 5px 5px 0px var(--ink);
+}
+
+.dark .poster-shadow {
+  box-shadow: 5px 5px 0px #000000;
+}
+
+.poster-shadow-sm {
+  box-shadow: 3px 3px 0px var(--ink);
+}
+
+.dark .poster-shadow-sm {
+  box-shadow: 3px 3px 0px #000000;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+

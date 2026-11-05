@@ -1,0 +1,170 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { motion, useReducedMotion } from "motion/react";
+import { MapPin, Clock, ArrowUpRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  formatEventTime,
+  formatRupiah,
+  formatStubDate,
+} from "@/lib/utils";
+import type { EventItem } from "@/types/database";
+
+interface TicketEventCardProps {
+  event: EventItem;
+  index?: number;
+}
+
+export function TicketEventCard({ event, index = 0 }: TicketEventCardProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const stub = formatStubDate(event.starts_at);
+
+  const ticketTypes = event.ticket_types || [];
+  const totalQuota = ticketTypes.reduce((acc, t) => acc + t.quota, 0);
+  const totalRemaining = ticketTypes.reduce((acc, t) => acc + t.remaining, 0);
+  const lowestPrice =
+    ticketTypes.length > 0
+      ? Math.min(...ticketTypes.map((t) => t.price))
+      : 0;
+
+  const isSoldOut = ticketTypes.length > 0 && totalRemaining === 0;
+  const isAlmostSoldOut =
+    !isSoldOut &&
+    totalQuota > 0 &&
+    totalRemaining / totalQuota < 0.18;
+  const isFree = ticketTypes.some((t) => t.price === 0);
+
+  return (
+    <motion.article
+      initial={
+        prefersReducedMotion ? false : { opacity: 0, y: 18 }
+      }
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        type: "spring",
+        stiffness: 320,
+        damping: 26,
+        delay: prefersReducedMotion ? 0 : index * 0.06,
+      }}
+      whileHover={
+        prefersReducedMotion
+          ? undefined
+          : { y: -4, rotate: -0.6, transition: { type: "spring", stiffness: 400, damping: 22 } }
+      }
+      className="group relative flex flex-col sm:flex-row border-2 border-ink bg-card poster-shadow ticket-notch-horizontal transition-colors"
+    >
+      {/* Sticker Badge (Rotated -6deg) */}
+      <div className="absolute -top-3.5 right-4 z-20 flex items-center gap-2">
+        {isSoldOut ? (
+          <Badge variant="ink" sticker>
+            HABIS TERJUAL
+          </Badge>
+        ) : isAlmostSoldOut ? (
+          <Badge variant="default" sticker>
+            HAMPIR HABIS • SISA {totalRemaining}
+          </Badge>
+        ) : isFree ? (
+          <Badge variant="pine" sticker>
+            GRATIS
+          </Badge>
+        ) : (
+          <Badge variant="mustard" sticker>
+            TERSEDIA
+          </Badge>
+        )}
+      </div>
+
+      {/* Left Vertical Date Stub */}
+      <div className="sm:w-24 shrink-0 bg-paper-subtle border-b-2 sm:border-b-0 sm:border-r-2 border-dashed border-ink/35 p-3.5 sm:p-4 flex sm:flex-col items-center justify-between text-center">
+        <div className="flex sm:flex-col items-baseline sm:items-center gap-2 sm:gap-0">
+          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-vermilion">
+            {stub.weekday}
+          </span>
+          <span className="font-display text-3xl sm:text-4xl font-extrabold leading-none tracking-tighter text-ink my-0.5">
+            {stub.day}
+          </span>
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-ink-muted">
+            {stub.month}
+          </span>
+        </div>
+
+        <div className="sm:mt-4 sm:pt-3 sm:border-t sm:border-ink/20 font-mono text-[10px] uppercase tracking-widest text-ink-muted">
+          {event.city}
+        </div>
+      </div>
+
+      {/* Main Ticket Content */}
+      <div className="flex-1 flex flex-col justify-between p-4 sm:p-5">
+        <div>
+          {/* Category + Cover thumbnail row */}
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 border border-ink bg-background text-ink">
+              <span>{event.categories?.emoji || "🎫"}</span>
+              <span>{event.categories?.name || "Acara"}</span>
+            </span>
+          </div>
+
+          {event.cover_url && (
+            <Link
+              href={`/events/${event.slug}`}
+              className="block relative h-40 w-full mb-3.5 border-2 border-ink overflow-hidden bg-ink"
+            >
+              <Image
+                src={event.cover_url}
+                alt={event.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-95"
+              />
+              <div className="absolute bottom-2 left-2 bg-ink/90 text-paper font-mono text-[10px] px-2 py-0.5 uppercase tracking-wider">
+                {event.city} // {formatEventTime(event.starts_at)}
+              </div>
+            </Link>
+          )}
+
+          <Link href={`/events/${event.slug}`} className="block group/title">
+            <h3 className="font-display text-xl font-extrabold tracking-tight leading-snug text-ink group-hover/title:text-vermilion transition-colors line-clamp-2">
+              {event.title}
+            </h3>
+          </Link>
+
+          <div className="mt-2.5 space-y-1 text-xs text-ink-muted font-mono">
+            <p className="flex items-center gap-1.5 truncate">
+              <MapPin className="w-3.5 h-3.5 text-vermilion shrink-0" />
+              <span className="truncate">
+                {event.venue}, {event.city}
+              </span>
+            </p>
+            <p className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-vermilion shrink-0" />
+              <span>Mulai {formatEventTime(event.starts_at)}</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Dashed Tear-Off Footer */}
+        <div className="mt-4 pt-3.5 border-t-2 border-dashed border-ink/25 flex items-end justify-between gap-2">
+          <div>
+            <span className="block font-mono text-[10px] uppercase tracking-widest text-ink-muted">
+              MULAI DARI
+            </span>
+            <span className="font-mono text-base font-extrabold text-ink">
+              {formatRupiah(lowestPrice)}
+            </span>
+          </div>
+
+          <Link
+            href={`/events/${event.slug}`}
+            className="inline-flex items-center gap-1.5 border-2 border-ink bg-vermilion text-[#FAF7F2] px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-wider poster-shadow-sm hover:bg-vermilion-hover transition-colors min-h-[40px]"
+          >
+            <span>{isSoldOut ? "Lihat Detail" : "Ambil Karcis"}</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
