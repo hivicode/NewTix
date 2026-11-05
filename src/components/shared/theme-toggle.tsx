@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { useTheme } from "next-themes";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
@@ -435,34 +436,39 @@ export function ThemeToggle() {
         </motion.button>
       </div>
 
-      {/* Toast Singkat Responsif (Tengah Bawah di Mobile, Tengah Atas di Desktop) */}
-      <AnimatePresence>
-        {toastMessage && (
-          <motion.div
-            key={toastMessage.id}
-            role="status"
-            aria-live="polite"
-            initial={
-              prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9 }
-            }
-            animate={{ opacity: 1, scale: 1 }}
-            exit={
-              prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }
-            }
-            transition={{ type: "spring", stiffness: 360, damping: 24 }}
-            className="pointer-events-none fixed bottom-6 md:bottom-auto md:top-6 left-1/2 -translate-x-1/2 z-[9998] flex items-center gap-2.5 rounded-2xl sm:rounded-full border-2 border-ink bg-card px-4 py-2 sm:px-5 sm:py-2.5 font-mono text-[11px] sm:text-xs font-bold text-ink poster-shadow text-center max-w-[calc(100vw-2rem)] w-max shadow-md"
-          >
-            <span
-              className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border border-[#14121F]"
-              style={{
-                backgroundColor:
-                  toastMessage.mode === "light" ? "#FFE98A" : "#FF9ECF",
-              }}
-            />
-            <span className="leading-snug">{toastMessage.text}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Toast Singkat Responsif (Tengah Bawah di Mobile via createPortal, Tengah Atas di Desktop) */}
+      {mounted && typeof document !== "undefined"
+        ? createPortal(
+            <AnimatePresence>
+              {toastMessage && (
+                <motion.div
+                  key={toastMessage.id}
+                  role="status"
+                  aria-live="polite"
+                  initial={
+                    prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9 }
+                  }
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={
+                    prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }
+                  }
+                  transition={{ type: "spring", stiffness: 360, damping: 24 }}
+                  className="pointer-events-none fixed top-auto bottom-8 md:top-6 md:bottom-auto left-1/2 -translate-x-1/2 z-[99999] flex items-center gap-2.5 rounded-2xl sm:rounded-full border-2 border-ink bg-card px-4 py-2 sm:px-5 sm:py-2.5 font-mono text-[11px] sm:text-xs font-bold text-ink poster-shadow text-center max-w-[calc(100vw-2rem)] w-max shadow-xl"
+                >
+                  <span
+                    className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border border-[#14121F]"
+                    style={{
+                      backgroundColor:
+                        toastMessage.mode === "light" ? "#FFE98A" : "#FF9ECF",
+                    }}
+                  />
+                  <span className="leading-snug">{toastMessage.text}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>,
+            document.body
+          )
+        : null}
     </>
   );
 }
