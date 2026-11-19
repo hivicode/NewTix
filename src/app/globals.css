@@ -3,17 +3,17 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --cloud: #F7F5FF;
-  --cloud-subtle: #ECE8FA;
-  --ink: #14121F;
-  --ink-muted: #585470;
-  --denim: #3F6FD9;
-  --denim-hover: #2E5BC2;
-  --bubblegum: #FF9ECF;
+  --cloud: #FFFFFF;
+  --cloud-subtle: #EDF9FF;
+  --ink: #1B1B1B;
+  --ink-muted: #5F6B76;
+  --denim: #2867A6;
+  --denim-hover: #1F5388;
+  --bubblegum: #BFE4FB;
   --butter: #FFE98A;
-  --mint: #9FE8C8;
-  --line: rgba(20, 18, 31, 0.16);
-  --line-strong: rgba(20, 18, 31, 0.35);
+  --mint: #7FCE5A;
+  --line: rgba(27, 27, 27, 0.12);
+  --line-strong: rgba(27, 27, 27, 0.25);
 
   --background: var(--cloud);
   --foreground: var(--ink);
@@ -50,10 +50,10 @@
   --line: rgba(247, 245, 255, 0.16);
   --line-strong: rgba(247, 245, 255, 0.34);
 
-  --background: #0E1020;
-  --foreground: #F7F5FF;
-  --card: #15182E;
-  --card-foreground: #F7F5FF;
+  --background: #FFFFFF;
+  --foreground: #1B1B1B;
+  --card: #FFFFFF;
+  --card-foreground: #1B1B1B;
   --popover: #15182E;
   --popover-foreground: #F7F5FF;
   --primary: #3F6FD9;
@@ -104,10 +104,10 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --font-display: var(--font-fraunces), var(--font-bricolage), serif;
-  --font-sans: var(--font-bricolage), sans-serif;
-  --font-serif: var(--font-fraunces), serif;
-  --font-mono: var(--font-space-mono), monospace;
+  --font-display: var(--font-inter), "Noto Sans KR", sans-serif;
+  --font-sans: var(--font-inter), "Noto Sans KR", sans-serif;
+  --font-serif: var(--font-inter), sans-serif;
+  --font-mono: var(--font-inter), sans-serif;
 }
 
 @layer base {
@@ -301,27 +301,27 @@
 }
 
 .sticker-shadow {
-  box-shadow: 3px 3px 0px var(--ink);
+  box-shadow: 0 2px 10px rgba(40, 103, 166, 0.12);
 }
 
 .dark .sticker-shadow {
-  box-shadow: 3px 3px 0px #060711;
+  box-shadow: 0 2px 10px rgba(40, 103, 166, 0.12);
 }
 
 .poster-shadow {
-  box-shadow: 5px 5px 0px var(--ink);
+  box-shadow: 0 2px 10px rgba(40, 103, 166, 0.12);
 }
 
 .dark .poster-shadow {
-  box-shadow: 5px 5px 0px #060711;
+  box-shadow: 0 2px 10px rgba(40, 103, 166, 0.12);
 }
 
 .poster-shadow-sm {
-  box-shadow: 3px 3px 0px var(--ink);
+  box-shadow: 0 2px 10px rgba(40, 103, 166, 0.12);
 }
 
 .dark .poster-shadow-sm {
-  box-shadow: 3px 3px 0px #060711;
+  box-shadow: 0 2px 10px rgba(40, 103, 166, 0.12);
 }
 
 /* Y2K Photobooth Frame */
@@ -329,7 +329,7 @@
   background-color: #FFFFFF;
   border: 2px solid #14121F;
   padding: 0.5rem 0.5rem 1.4rem 0.5rem;
-  box-shadow: 3px 3px 0px var(--ink);
+  box-shadow: 0 2px 10px rgba(40, 103, 166, 0.12);
   position: relative;
 }
 
@@ -368,3 +368,48 @@
     transition: none !important;
   }
 }
+
+/* KiiiKiii / Web 2.0 travel-agency style */
+.border-ink { border-color: #d6d6d6 !important; }
+.border-2 { border-width: 1px; }
+.rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl { border-radius: 3px; }
+.font-display { font-weight: 600; font-style: normal !important; }
+.italic { font-style: normal; }
+.border-b-2 { border-width: 0; border-bottom-width: 1px; }
+.border-t-2 { border-width: 0; border-top-width: 1px; }
+
+.bevel-header {
+  box-shadow: 0 0 7.2px rgba(61,61,61,.48), inset 0 0 35px #fff, inset 0 0 18px #cfcfcf;
+}
+.gloss-orange {
+  background: linear-gradient(#ffb84d, #ff8a09); color: #fff;
+  border: 1px solid rgba(255,255,255,.5); border-radius: 7px;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.6), 0 3px 5px rgba(0,0,0,.25);
+  text-shadow: 0 1px 1px rgba(0,0,0,.15);
+}
+.gloss-green {
+  background: linear-gradient(#7fce5a, #54ac32); color: #fff;
+  border: 1px solid rgba(255,255,255,.65); border-radius: 999px;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.55), 0 1px 3px rgba(0,0,0,.25);
+}
+.gloss-silver {
+  background: linear-gradient(#ffffff, #e4e4e4); color: #1b1b1b;
+  border: 1px solid #c1c1c1; border-radius: 7px;
+  box-shadow: inset 0 1px 1px #fff, 0 1px 3px rgba(0,0,0,.18);
+}
+.gloss-orange:hover, .gloss-green:hover, .gloss-silver:hover { filter: brightness(1.05); }
+@utility booking-box {
+  background: linear-gradient(#f4f4f4 0%, #edf9ff 84%);
+  border: 1px solid #ebebeb;
+  box-shadow: 0 4px 4px rgba(0,0,0,.25), inset 0 0 11px #fff;
+}
+.field-inset {
+  height: 27px; font-size: 12px; border: 1px solid #c1c1c1; background: #fff;
+  box-shadow: inset 0 0 4px rgba(0,0,0,.15); padding: 0 6px; width: 100%;
+}
+.frame-card { background: #fff; border: 1px solid #dcdcdc; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+
+.link-blue { color: #2867a6; text-decoration: underline; }
+.link-blue:hover { opacity: .6; }
+@keyframes pin-float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+.pin-float { animation: pin-float 2.4s ease-in-out infinite; }

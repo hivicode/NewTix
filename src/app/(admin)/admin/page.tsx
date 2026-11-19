@@ -114,10 +114,10 @@ export default async function AdminDashboardPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-2 border-ink pb-6">
         <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+          <span className="text-xs font-bold text-denim block">
             PUSAT KENDALI // NEWTIX
           </span>
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">
             Ringkasan Tiket &{" "}
             <span className="font-serif italic font-semibold text-denim">
               Pantauan Live.
@@ -137,15 +137,15 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
           <div className="flex items-center justify-between text-ink-muted mb-3">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold">
               TOTAL ACARA
             </span>
             <Calendar className="w-4 h-4 text-denim" />
           </div>
-          <span className="font-mono text-4xl font-extrabold text-ink block">
+          <span className="text-4xl font-semibold text-ink block">
             {events.length}
           </span>
-          <span className="font-mono text-xs text-ink-muted mt-1 block">
+          <span className="text-xs text-ink-muted mt-1 block">
             {events.filter((e) => e.status === "published").length} acara sedang
             tayang
           </span>
@@ -153,30 +153,30 @@ export default async function AdminDashboardPage() {
 
         <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
           <div className="flex items-center justify-between text-ink-muted mb-3">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold">
               TIKET TERJUAL
             </span>
             <TicketIcon className="w-4 h-4 text-denim" />
           </div>
-          <span className="font-mono text-4xl font-extrabold text-denim block">
+          <span className="text-4xl font-semibold text-denim block">
             {totalTicketsSold.toLocaleString("id-ID")}
           </span>
-          <span className="font-mono text-xs text-ink-muted mt-1 block">
+          <span className="text-xs text-ink-muted mt-1 block">
             Akumulasi seluruh gelombang tiket
           </span>
         </div>
 
         <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
           <div className="flex items-center justify-between text-ink-muted mb-3">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold">
               TOTAL PENDAPATAN
             </span>
             <Coins className="w-4 h-4 text-denim" />
           </div>
-          <span className="font-mono text-3xl sm:text-4xl font-extrabold text-ink block">
+          <span className="text-3xl sm:text-4xl font-semibold text-ink block">
             {formatRupiah(totalOrdersRevenue)}
           </span>
-          <span className="inline-block rounded-full bg-mint text-[#14121F] border border-ink px-2 py-0.5 font-mono text-[10px] mt-1 font-bold">
+          <span className="inline-block rounded-full bg-mint text-[#14121F] border border-ink px-2 py-0.5 text-[10px] mt-1 font-bold">
             100% Transaksi Lunas
           </span>
         </div>
@@ -190,10 +190,10 @@ export default async function AdminDashboardPage() {
             <div className="flex items-center gap-2.5">
               <TrendingUp className="w-5 h-5 text-denim" />
               <div>
-                <h2 className="font-display text-xl font-extrabold tracking-tight">
+                <h2 className="font-display text-xl font-semibold tracking-tight">
                   Tingkat Keterisian Kuota Acara
                 </h2>
-                <p className="font-mono text-[11px] text-ink-muted">
+                <p className="text-[11px] text-ink-muted">
                   Perbandingan tiket terjual terhadap kapasitas kuota
                 </p>
               </div>
@@ -206,11 +206,11 @@ export default async function AdminDashboardPage() {
                 <div className="flex items-center justify-between gap-2 text-xs">
                   <span className="font-bold text-ink truncate">
                     {row.title}{" "}
-                    <span className="font-mono text-ink-muted font-normal">
+                    <span className="text-ink-muted font-normal">
                       ({row.city})
                     </span>
                   </span>
-                  <span className="font-mono font-bold text-ink shrink-0">
+                  <span className="font-bold text-ink shrink-0">
                     {row.sold}/{row.quota} ({row.pct}%)
                   </span>
                 </div>

@@ -92,16 +92,16 @@ export function AdminLiveOrdersFeed({
         <div className="flex items-center gap-2.5">
           <ReceiptText className="w-5 h-5 text-denim" />
           <div>
-            <h2 className="font-display text-xl font-extrabold tracking-tight">
+            <h2 className="font-display text-xl font-semibold tracking-tight">
               Pembelian Terbaru (Live)
             </h2>
-            <p className="font-mono text-[11px] text-ink-muted">
+            <p className="text-[11px] text-ink-muted">
               Menerima sinyal INSERT langsung dari tabel orders
             </p>
           </div>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-2.5 py-1 bg-butter text-[#14121F] font-mono text-[10px] font-bold uppercase tracking-wider">
+        <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-2.5 py-1 bg-butter text-[#14121F] text-[10px] font-bold">
           <Radio
             className={cn(
               "w-3 h-3",
@@ -113,7 +113,7 @@ export function AdminLiveOrdersFeed({
       </div>
 
       {orders.length === 0 ? (
-        <div className="py-10 text-center font-mono text-xs text-ink-muted">
+        <div className="py-10 text-center text-xs text-ink-muted">
           Belum ada transaksi masuk. Begitu ada pembeli, baris baru akan muncul
           otomatis di sini tanpa reload.
         </div>
@@ -133,7 +133,7 @@ export function AdminLiveOrdersFeed({
                 className="rounded-lg border-2 border-ink bg-background p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
               >
                 <div>
-                  <div className="flex items-center gap-2 font-mono text-[11px] text-ink-muted">
+                  <div className="flex items-center gap-2 text-[11px] text-ink-muted">
                     <span className="font-bold text-ink">
                       #{ord.id.slice(0, 8).toUpperCase()}
                     </span>
@@ -145,16 +145,16 @@ export function AdminLiveOrdersFeed({
                       {formatEventTime(ord.created_at)}
                     </span>
                   </div>
-                  <p className="font-display text-sm font-extrabold text-ink mt-0.5">
+                  <p className="font-display text-sm font-semibold text-ink mt-0.5">
                     {ord.event_title || "Pembelian Tiket"}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3 self-end sm:self-center">
-                  <span className="rounded-full bg-mint text-[#14121F] font-mono text-[10px] font-bold uppercase px-2 py-0.5 border border-ink">
+                  <span className="rounded-full bg-mint text-[#14121F] text-[10px] font-bold px-2 py-0.5 border border-ink">
                     {ord.status}
                   </span>
-                  <span className="font-mono text-sm font-extrabold text-denim">
+                  <span className="text-sm font-semibold text-denim">
                     {formatRupiah(ord.total_amount)}
                   </span>
                 </div>

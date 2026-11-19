@@ -1,377 +1,181 @@
-import Link from "next/link";
-import Image from "next/image";
-import {
-  ArrowUpRight,
-  QrCode,
-  MapPin,
-  Calendar,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { MarqueeStrip } from "@/components/shared/marquee-strip";
-import { TicketEventCard } from "@/components/shared/ticket-event-card";
-import {
-  BunnyMascot,
-  BunnyStickerBadge,
-  ThemeAwareBunnyMascot,
-  Y2KStarSticker,
-} from "@/components/shared/y2k-stickers";
 import { getCategories, getFeaturedEvents } from "@/lib/queries";
-import { formatEventDate, formatRupiah } from "@/lib/utils";
+import { HeroTicket } from "@/components/kk/hero-ticket";
+import { ScheduleCarousel } from "@/components/kk/schedule-carousel";
+import { FeaturedShelf } from "@/components/kk/featured-shelf";
+import { MapSection } from "@/components/kk/map-section";
+
+const A = "/newtix/home";
+
+const reviews = [
+  ["Zero queue, walked straight in 10/10", 1, "Lee Sumin", "2 hours ago"],
+  ["Amazing show, bestest tickets", 2, "King Kya", "8 hours ago"],
+  ["Checkout was a breeze\nVery well planned", 3, "TiiiKiii", "10 hours ago"],
+  ["QR scanned on the first try,\nwould recommend", 4, "Jiyuuu", "2 secs ago"],
+  ["Live quota is actually honest", 5, "anonymous", "1 day ago"],
+  ["No double-ticket drama at all", 6, "Rara", "2 hours ago"],
+] as const;
 
 export default async function LandingPage() {
-  const [categories, featuredEvents] = await Promise.all([
+  const [categories, events] = await Promise.all([
     getCategories(),
     getFeaturedEvents(6),
   ]);
-
-  const heroSpotlight = featuredEvents[0];
+  const cities = [
+    "Jakarta",
+    "Bandung",
+    "Banyuwangi",
+    "Seoul",
+    "Tokyo",
+    "Osaka",
+    "Fukuoka",
+  ];
 
   return (
-    <main>
-      {/* HERO SECTION: Y2K Concert Ticket & Photobooth Aesthetic */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 pb-16 lg:pt-14 lg:pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-start">
-          {/* Left 7 Cols: Cheerful, Personal Editorial Typography */}
-          <div className="lg:col-span-7 space-y-6 pt-2 relative">
-            <div className="flex flex-wrap items-center gap-3">
-              <BunnyStickerBadge label="NEWTIX CLUB // EDISI Y2K" />
-              <Y2KStarSticker className="w-6 h-6 rotate-12" color="#FFE98A" />
-            </div>
+    <div className="kk">
+      <main>
+        <HeroTicket
+          categories={categories.map((c) => ({ id: c.id, slug: c.slug, name: c.name }))}
+          cities={cities}
+          eventTitles={events.map((e) => e.title)}
+        />
 
-            <h1 className="font-display font-extrabold tracking-tight text-ink leading-[0.95] text-[clamp(2.65rem,6vw,5.25rem)]">
-              Tiket aman,{" "}
-              <span className="font-serif italic font-semibold text-denim">
-                hati tenang,
-              </span>{" "}
-              tinggal datang!
-            </h1>
-
-            <p className="text-base sm:text-lg text-ink-muted max-w-xl leading-relaxed">
-              Arsip memorabilia fan meeting resmi, panggung festival internasional,
-              hingga temu komunitas bertema Y2K &amp; photobooth. Di{" "}
-              <strong className="text-ink">NewTix</strong>, jelajahi arsip berharga
-              dan amankan tiket kumpul komunitas favoritmu!
+        {/* SCHEDULE */}
+        <section className="section-schedule" id="schedule">
+          <div className="section-head">
+            <h2>
+              NewTix Show <span className="accent">Schedule</span>
+            </h2>
+            <p>
+              Live quota, honest prices, and a unique experience for every
+              show.
             </p>
+          </div>
+          <ScheduleCarousel events={events} />
+        </section>
 
-            <div className="flex flex-wrap items-center gap-3.5 pt-2">
-              <Button asChild size="lg">
-                <Link href="/events">
-                  <span>Cari Acara Seru</span>
-                  <ArrowUpRight className="w-5 h-5" />
-                </Link>
-              </Button>
-              <Button asChild variant="secondary" size="lg">
-                <Link href="/my-tickets">
-                  <QrCode className="w-4 h-4" />
-                  <span>Buka Album Tiketku</span>
-                </Link>
-              </Button>
-            </div>
-
-            {/* Y2K Stamp Highlights */}
-            <div className="pt-6 grid grid-cols-3 gap-3 max-w-lg border-t-2 border-dashed border-ink/25">
-              <div className="rounded-lg border-2 border-ink bg-card p-3 poster-shadow-sm">
-                <span className="font-mono text-xl sm:text-2xl font-extrabold text-denim block">
-                  100%
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
-                  Kuota Dijaga Live
-                </span>
-              </div>
-              <div className="rounded-lg border-2 border-ink bg-butter text-[#14121F] p-3 poster-shadow-sm -rotate-1">
-                <span className="font-mono text-xl sm:text-2xl font-extrabold block">
-                  3 dtk
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-wider opacity-80">
-                  QR Langsung Jadi
-                </span>
-              </div>
-              <div className="rounded-lg border-2 border-ink bg-mint text-[#14121F] p-3 poster-shadow-sm rotate-1">
-                <span className="font-mono text-xl sm:text-2xl font-extrabold block">
-                  0 Calo
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-wider opacity-80">
-                  Harga Jujur
-                </span>
-              </div>
+        {/* PROMO */}
+        <section className="section-promo">
+          <div className="promo-banner">
+            <p className="promo-text">
+              <span className="promo-long">Lost your tickets on the way? </span>
+              Keep every QR pass safe at{" "}
+              <a href="/my-tickets">newtix.id/my-tickets</a>
+            </p>
+            <div className="promo-right">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="promo-bag" src={`${A}/3_Promo/BagIcon.png`} alt="" />
+              <a className="promo-shop" href="/my-tickets">
+                Open now &raquo;
+              </a>
             </div>
           </div>
+        </section>
 
-          {/* Right 5 Cols: Y2K Photobooth Strip Spotlight Card */}
-          {heroSpotlight && (
-            <div className="lg:col-span-5 relative">
-              {/* Bunny & Star Stickers */}
-              <div className="absolute -top-4 -left-3 z-20 flex items-center gap-2">
-                <Badge
-                  variant="bubblegum"
-                  sticker
-                  className="text-xs px-4 py-1.5"
-                >
-                  ★ PILIHAN MINGGU INI ★
-                </Badge>
+        {/* FEATURED */}
+        <section className="section-guides" id="featured">
+          <div className="section-head">
+            <h2>
+              Featured <span className="accent">Shows</span>
+            </h2>
+            <p>Meet the best live shows in town.</p>
+          </div>
+          <FeaturedShelf events={events} />
+        </section>
+
+        {/* MAP */}
+        <section className="section-map" id="map">
+          <div className="section-head">
+            <h2>
+              <span className="accent">Map</span> of NewTix
+            </h2>
+            <p>Take a peek at where the shows are happening</p>
+          </div>
+          <MapSection events={events} />
+        </section>
+
+        {/* PARTNERS */}
+        <section className="section-partners">
+          <div className="section-head">
+            <h2>
+              Our <span className="accent">Partners</span>
+            </h2>
+          </div>
+          <div className="marquee">
+            <div className="marquee-track">
+              {[0, 1].map((set) => (
+                <div className="marquee-set" key={set} aria-hidden={set === 1}>
+                  {[1, 2, 3, 4, 5, 6].map((n) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img key={n} src={`${A}/6_Partners/Partners_${n}.png`} alt={set ? "" : "Partner"} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* REVIEWS */}
+        <section className="section-reviews" id="reviews">
+          <div className="reviews-inner">
+            <div className="reviews-summary">
+              <div className="rs-head">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="review-icon" src={`${A}/7_Reviews/ReviewIcon.png`} alt="" />
+                <span className="rs-title">Honest Reviews</span>
               </div>
-              <div className="absolute -bottom-5 -right-3 z-20 hidden sm:block">
-                <div className="rounded-full border-2 border-[#14121F] bg-butter p-2 sticker-shadow rotate-6">
-                  <ThemeAwareBunnyMascot className="w-12 h-12" />
+              <div className="rs-rating">
+                <span className="rs-label">Average Rating</span>
+                <div className="rs-row">
+                  <span className="rs-score">5.0</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="rs-stars" src={`${A}/7_Reviews/5Stars.png`} alt="5 out of 5 stars" />
+                  <span className="rs-count">(hundreds of millions)</span>
                 </div>
               </div>
-
-              <div className="rounded-2xl border-2 border-ink bg-card p-4 sm:p-5 poster-shadow lg:rotate-1 transition-transform hover:rotate-0">
-                <div className="flex items-center justify-between border-b-2 border-dashed border-ink/30 pb-2.5 mb-3.5 font-mono text-[11px] uppercase tracking-widest">
-                  <span className="font-bold text-denim">
-                    PHOTOBOOTH #01 // {heroSpotlight.city}
-                  </span>
-                  <span className="rounded-full bg-mint text-[#14121F] px-2 py-0.5 text-[10px] font-bold border border-ink">
-                    READY
-                  </span>
-                </div>
-
-                {heroSpotlight.cover_url && (
-                  <div className="photobooth-frame mb-4">
-                    <div className="relative h-60 sm:h-68 w-full border border-[#14121F] overflow-hidden bg-ink">
-                      <Image
-                        src={heroSpotlight.cover_url}
-                        alt={heroSpotlight.title}
-                        fill
-                        priority
-                        unoptimized={heroSpotlight.cover_url.startsWith("/") || heroSpotlight.cover_url.endsWith(".svg")}
-                        sizes="(max-width: 1024px) 100vw, 42vw"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="mt-2 flex items-center justify-between font-mono text-[11px] text-ink-muted px-1">
-                      <span>NEWTIX SNAPSHOT ★ 2026</span>
-                      <span>PINTU BUKA 19:00</span>
-                    </div>
-                  </div>
-                )}
-
-                <h2 className="font-display text-2xl font-extrabold tracking-tight leading-snug mb-2">
-                  {heroSpotlight.title}
-                </h2>
-
-                <div className="space-y-1 font-mono text-xs text-ink-muted mb-4">
-                  <p className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-denim" />
-                    <span>{formatEventDate(heroSpotlight.starts_at)}</span>
+            </div>
+            <div className="reviews-grid">
+              {reviews.map(([text, pfp, name, time]) => (
+                <article className="review-card" key={name}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="rc-stars" src={`${A}/7_Reviews/5Stars.png`} alt="5 stars" />
+                  <p className="rc-text">
+                    {text.split("\n").map((l, i) => (
+                      <span key={i}>
+                        {i > 0 && <br />}
+                        {l}
+                      </span>
+                    ))}
                   </p>
-                  <p className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-denim" />
-                    <span>
-                      {heroSpotlight.venue}, {heroSpotlight.city}
+                  <div className="rc-user">
+                    <span className="rc-avatar">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`${A}/7_Reviews/pfp${pfp}.png`} alt="" />
                     </span>
-                  </p>
-                </div>
-
-                <div className="pt-3.5 border-t-2 border-dashed border-ink/30 flex items-center justify-between">
-                  <div>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-ink-muted block">
-                      HARGA TIKET
-                    </span>
-                    <span className="font-mono text-lg font-extrabold text-ink">
-                      {formatRupiah(
-                        heroSpotlight.ticket_types?.[1]?.price ||
-                          heroSpotlight.ticket_types?.[0]?.price ||
-                          85000
-                      )}
+                    <span className="rc-meta">
+                      <span className="rc-name">{name}</span>
+                      <span className="rc-time">{time}</span>
                     </span>
                   </div>
-
-                  <Button asChild size="sm">
-                    <Link href={`/events/${heroSpotlight.slug}`}>
-                      Ambil Tiket →
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* MARQUEE STRIP */}
-      <MarqueeStrip />
-
-      {/* CATEGORY STAMPS SECTION */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 border-b-2 border-dashed border-ink/25">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-          <div>
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
-              KOLEKSI KATEGORI
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight">
-              Lagi pengen{" "}
-              <span className="font-serif italic font-semibold text-denim">
-                suasana apa
-              </span>{" "}
-              akhir pekan ini?
-            </h2>
-          </div>
-          <Link
-            href="/events"
-            className="font-mono text-xs font-bold uppercase tracking-widest text-ink underline decoration-bubblegum decoration-2 underline-offset-4 hover:text-denim"
-          >
-            Lihat Semua Kategori →
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          {categories.map((cat, i) => (
-            <Link
-              key={cat.id}
-              href={`/events?category=${cat.slug}`}
-              className="group rounded-xl border-2 border-ink bg-card p-4 poster-shadow-sm hover:bg-bubblegum hover:text-[#14121F] transition-all flex flex-col justify-between min-h-[116px]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs opacity-75">
-                  0{i + 1} // {cat.slug.toUpperCase()}
-                </span>
-                <span className="text-xl" aria-hidden="true">
-                  {cat.emoji}
-                </span>
-              </div>
-              <div className="mt-4 flex items-end justify-between">
-                <span className="font-display text-lg font-extrabold tracking-tight leading-tight">
-                  {cat.name}
-                </span>
-                <ArrowUpRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* FEATURED EVENTS GRID */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-          <div>
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
-              JADWAL TERDEKAT ★ JANGAN SAMPAI KELEWATAN
-            </span>
-            <h2 className="font-display text-3xl sm:text-5xl font-extrabold tracking-tight">
-              Acara paling{" "}
-              <span className="font-serif italic font-semibold text-denim">
-                ditunggu-tunggu.
-              </span>
-            </h2>
-          </div>
-
-          <Button asChild variant="outline">
-            <Link href="/events">Lihat Semua Acara (8)</Link>
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
-          {featuredEvents.map((event, index) => (
-            <TicketEventCard key={event.id} event={event} index={index} />
-          ))}
-        </div>
-      </section>
-
-      {/* 3-STEP HOW IT WORKS */}
-      <section className="border-y-2 border-ink bg-cloud-subtle py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mb-12">
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
-              GAMPANG BANGET // 3 LANGKAH AJA
-            </span>
-            <h2 className="font-display text-3xl sm:text-5xl font-extrabold tracking-tight mt-1">
-              Cara dapetin tiket di{" "}
-              <span className="font-serif italic font-semibold text-denim">
-                NewTix.
-              </span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-xl border-2 border-ink bg-card p-6 poster-shadow relative">
-              <span className="inline-block rounded-full border-2 border-ink bg-denim text-white font-mono text-xs font-bold px-3 py-1 mb-4">
-                LANGKAH 01 ★
-              </span>
-              <h3 className="font-display text-2xl font-extrabold mb-2">
-                Intip Acara & Kuota Live
-              </h3>
-              <p className="text-sm text-ink-muted leading-relaxed">
-                Sisa kuota tiket tampil jujur dan berubah langsung di layarmu
-                tanpa perlu bolak-balik refresh halaman.
-              </p>
-            </div>
-
-            <div className="rounded-xl border-2 border-ink bg-card p-6 poster-shadow relative">
-              <span className="inline-block rounded-full border-2 border-ink bg-bubblegum text-[#14121F] font-mono text-xs font-bold px-3 py-1 mb-4">
-                LANGKAH 02 ★
-              </span>
-              <h3 className="font-display text-2xl font-extrabold mb-2">
-                Klik Beli, Jatahmu Dikunci
-              </h3>
-              <p className="text-sm text-ink-muted leading-relaxed">
-                Begitu kamu checkout, sistem langsung mengunci kursimu. Nggak
-                bakal ada drama tiket ganda atau kehabisan di tengah jalan.
-              </p>
-            </div>
-
-            <div className="rounded-xl border-2 border-ink bg-card p-6 poster-shadow relative">
-              <span className="inline-block rounded-full border-2 border-ink bg-mint text-[#14121F] font-mono text-xs font-bold px-3 py-1 mb-4">
-                LANGKAH 03 ★
-              </span>
-              <h3 className="font-display text-2xl font-extrabold mb-2">
-                Pamerkan Tiket QR di Pintu
-              </h3>
-              <p className="text-sm text-ink-muted leading-relaxed">
-                Tiket digitalmu keluar lengkap dengan QR code, stiker kelinci,
-                dan nomor seri unik. Tinggal scan, langsung masuk venue!
-              </p>
+                </article>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* BOTTOM CTA BANNER */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">
-        <div className="rounded-2xl border-2 border-ink bg-denim text-white p-8 sm:p-12 lg:p-16 poster-shadow relative overflow-hidden">
-          <div className="relative z-10 max-w-2xl space-y-5">
-            <span className="inline-flex items-center gap-2 rounded-full border-2 border-[#14121F] bg-butter text-[#14121F] font-mono text-xs font-bold uppercase tracking-widest px-3.5 py-1">
-              <span>★ SIAP BUAT MALAM YANG SERU? ★</span>
-            </span>
-            <h2 className="font-display text-3xl sm:text-5xl font-extrabold tracking-tight leading-[0.98]">
-              Jangan tunggu sampai{" "}
-              <span className="font-serif italic font-semibold text-butter">
-                stiker sold out
-              </span>{" "}
-              ditempel!
-            </h2>
-            <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-              Bikin akun member NewTix cuma butuh beberapa detik lewat email
-              atau GitHub. Yuk, amankan tiket pertamamu hari ini!
-            </p>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Button
-                asChild
-                size="lg"
-                variant="secondary"
-                className="bg-bubblegum text-[#14121F] hover:bg-butter"
-              >
-                <Link href="/events">Jelajahi Acara Sekarang</Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="bg-white text-[#14121F] hover:bg-butter"
-              >
-                <Link href="/register">Daftar Member Gratis</Link>
-              </Button>
-            </div>
+        {/* PHOTOS */}
+        <section className="section-photos">
+          <div className="photos-inner">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="photos-title" src={`${A}/8_Photos/Title.png`} alt="Where Paradise Feels Real" style={{ width: 360 }}/>
+            {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+              <figure className={`polaroid p${n}`} key={n}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`${A}/8_Photos/Photos_${n}.jpg`} alt="" />
+              </figure>
+            ))}
           </div>
-
-          <div className="hidden lg:flex items-center justify-center absolute right-12 bottom-8 z-10">
-            <div className="rounded-2xl border-2 border-[#14121F] bg-bubblegum p-4 sticker-shadow -rotate-6">
-              <ThemeAwareBunnyMascot className="w-24 h-24" />
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </div>
   );
 }

@@ -2,24 +2,13 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import {
-  Minus,
-  Plus,
-  Ticket as TicketIcon,
-  AlertCircle,
-  Loader2,
-  Radio,
-  ShieldCheck,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   purchaseTicketsAction,
   type PurchaseActionState,
 } from "@/actions/tickets";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { formatRupiah, cn } from "@/lib/utils";
+import { formatRupiah } from "@/lib/utils";
 import type { TicketType } from "@/types/database";
 
 interface TicketPurchaseWidgetProps {
@@ -37,7 +26,6 @@ export function TicketPurchaseWidget({
   initialTicketTypes,
   isLoggedIn,
 }: TicketPurchaseWidgetProps) {
-  const prefersReducedMotion = useReducedMotion();
   const [ticketTypes, setTicketTypes] =
     React.useState<TicketType[]>(initialTicketTypes);
   const [selectedId, setSelectedId] = React.useState<string>(() => {
@@ -52,7 +40,6 @@ export function TicketPurchaseWidget({
     initialState
   );
 
-  // Subscribe ke Supabase Realtime (postgres_changes pada ticket_types)
   React.useEffect(() => {
     if (!isSupabaseConfigured()) return;
 
@@ -111,47 +98,42 @@ export function TicketPurchaseWidget({
   const totalAmount = selectedTicket ? selectedTicket.price * qty : 0;
 
   return (
-    <div className="rounded-2xl border-2 border-ink bg-card p-5 sm:p-6 poster-shadow relative">
-      {/* Header Loket */}
-      <div className="flex items-center justify-between border-b-2 border-dashed border-ink/25 pb-4 mb-5">
-        <div>
-          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-denim block">
-            BOOTH TIKET // NEWTIX
-          </span>
-          <h2 className="font-display text-2xl font-extrabold tracking-tight">
-            Pilih Kategori Tiket
-          </h2>
-        </div>
-
-        <div className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-2.5 py-1 bg-butter text-[#14121F] font-mono text-[10px] font-bold uppercase tracking-wider">
-          <Radio
-            className={cn(
-              "w-3 h-3",
-              realtimeConnected ? "text-denim animate-pulse" : "text-[#14121F]"
-            )}
+    <div className="booking-box p-5">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-[#d8eaf6] pb-3 mb-4">
+        <div className="flex items-center gap-1.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/newtix/home/1_Ticket/BookTicketNow.png"
+            alt="book ticket now!"
+            style={{ width: 155, height: "auto" }}
           />
-          <span>{realtimeConnected ? "KUOTA LIVE" : "SIAP CETAK"}</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/newtix/home/1_Ticket/Arrow.png"
+            alt=""
+            style={{ width: 32, height: "auto" }}
+          />
         </div>
+        <span className="border border-[#54ac32] bg-[#edf9e8] px-2 py-0.5 text-[10px] font-bold text-[#2f7d18]">
+          {realtimeConnected ? "LIVE QUOTA" : "READY"}
+        </span>
       </div>
 
       {state.error && (
         <div
           role="alert"
-          className="mb-4 rounded-md border-2 border-destructive bg-destructive/10 p-3 text-xs font-mono text-destructive flex items-start gap-2"
+          className="mb-3 border border-[#e0584f] bg-[#fff2f2] p-2.5 text-[12px] font-semibold text-[#c0392b]"
         >
-          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-          <span>{state.error}</span>
+          {state.error}
         </div>
       )}
 
-      {/* Daftar Ticket Types */}
-      <div className="space-y-3 mb-6">
+      {/* Ticket Tiers */}
+      <div className="space-y-2 mb-4">
         {ticketTypes.map((ticket) => {
           const isSoldOut = ticket.remaining === 0;
-          const ratio = ticket.quota > 0 ? ticket.remaining / ticket.quota : 0;
-          const isLowQuota = !isSoldOut && ratio < 0.15;
           const isSelected = selectedId === ticket.id;
-
           return (
             <button
               key={ticket.id}
@@ -161,205 +143,114 @@ export function TicketPurchaseWidget({
                 setSelectedId(ticket.id);
                 setQty(1);
               }}
-              className={cn(
-                "w-full text-left rounded-xl border-2 p-4 transition-all relative cursor-pointer",
+              className={`w-full text-left border p-3 transition-colors ${
                 isSoldOut
-                  ? "border-ink/30 bg-cloud-subtle/60 opacity-60 cursor-not-allowed"
+                  ? "border-[#d6d6d6] bg-[#f4f4f4] opacity-60 cursor-not-allowed"
                   : isSelected
-                  ? "border-ink bg-cloud-subtle poster-shadow-sm"
-                  : "border-ink/60 bg-background hover:border-ink"
-              )}
+                    ? "border-[#2867a6] bg-white shadow-[inset_0_0_0_1px_#2867a6] cursor-pointer"
+                    : "border-[#c1c1c1] bg-white/80 hover:bg-white cursor-pointer"
+              }`}
             >
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-display text-base font-extrabold text-ink">
-                      {ticket.name}
-                    </span>
-                    {isSoldOut && (
-                      <Badge variant="ink" className="text-[10px]">
-                        SOLD OUT
-                      </Badge>
-                    )}
-                    {isLowQuota && (
-                      <Badge
-                        variant="bubblegum"
-                        sticker
-                        className="text-[10px]"
-                      >
-                        HAMPIR HABIS
-                      </Badge>
-                    )}
-                    {!isSoldOut && ticket.price === 0 && (
-                      <Badge variant="mint" className="text-[10px]">
-                        GRATIS
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Animated Remaining Counter */}
-                  <div className="mt-1.5 flex items-center gap-2 font-mono text-xs text-ink-muted">
-                    <span>Sisa kuota:</span>
-                    <AnimatePresence mode="popLayout" initial={false}>
-                      <motion.span
-                        key={ticket.remaining}
-                        initial={
-                          prefersReducedMotion ? false : { y: -10, opacity: 0 }
-                        }
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={
-                          prefersReducedMotion
-                            ? undefined
-                            : { y: 10, opacity: 0 }
-                        }
-                        transition={{ duration: 0.18 }}
-                        className={cn(
-                          "inline-block font-bold px-1.5 py-0.5 rounded border border-ink/30 bg-card",
-                          isLowQuota ? "text-denim" : "text-ink"
-                        )}
-                      >
-                        {ticket.remaining} / {ticket.quota}
-                      </motion.span>
-                    </AnimatePresence>
-                  </div>
-                </div>
-
-                <div className="text-right shrink-0">
-                  <span className="font-mono text-base font-extrabold text-ink block">
-                    {formatRupiah(ticket.price)}
-                  </span>
-                  <span className="font-mono text-[10px] text-ink-muted uppercase">
-                    / tiket
-                  </span>
-                </div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[13px] font-bold text-black">
+                  {ticket.name}
+                </span>
+                <span className="text-[13px] font-bold text-[#2867a6]">
+                  {ticket.price === 0 ? "Free" : formatRupiah(ticket.price)}
+                </span>
+              </div>
+              <div className="mt-1 flex items-center justify-between text-[11px] text-[#5a5a5a]">
+                <span>
+                  {isSoldOut
+                    ? "Sold Out"
+                    : `${ticket.remaining} of ${ticket.quota} left`}
+                </span>
+                {isSelected && !isSoldOut && (
+                  <span className="font-bold text-[#2f7d18]">Selected</span>
+                )}
               </div>
             </button>
           );
         })}
       </div>
 
-      {/* Stepper Jumlah & Ringkasan Harga Live */}
-      <form action={formAction} className="space-y-5">
-        <input type="hidden" name="ticketTypeId" value={selectedId} />
-        <input type="hidden" name="qty" value={qty} />
+      {/* Quantity + Submit */}
+      <form action={formAction}>
+        <input type="hidden" name="eventId" value={eventId} />
         <input type="hidden" name="eventSlug" value={eventSlug} />
+        <input type="hidden" name="ticketTypeId" value={selectedId} />
+        <input type="hidden" name="quantity" value={qty} />
 
-        <div className="flex items-center justify-between border-y-2 border-dashed border-ink/25 py-4">
-          <div>
-            <span className="font-mono text-xs font-bold uppercase tracking-wider text-ink block">
-              Jumlah Tiket
-            </span>
-            <span className="font-mono text-[11px] text-ink-muted">
-              Maks. 5 tiket per pesanan
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={() => setQty((q) => Math.max(1, q - 1))}
-              disabled={!selectedTicket || qty <= 1 || isPending}
-              aria-label="Kurangi jumlah tiket"
-            >
-              <Minus className="w-4 h-4" />
-            </Button>
-
-            <div className="w-12 h-11 rounded-md border-2 border-ink bg-background flex items-center justify-center font-mono text-base font-extrabold">
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.span
-                  key={qty}
-                  initial={
-                    prefersReducedMotion ? false : { scale: 0.8, opacity: 0 }
-                  }
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={
-                    prefersReducedMotion
-                      ? undefined
-                      : { scale: 0.8, opacity: 0 }
-                  }
-                  transition={{ duration: 0.12 }}
-                >
-                  {selectedTicket && selectedTicket.remaining > 0 ? qty : 0}
-                </motion.span>
-              </AnimatePresence>
+        {!allSoldOut && selectedTicket && selectedTicket.remaining > 0 && (
+          <div className="mb-4 flex items-center justify-between border-y border-[#d8eaf6] py-3 text-[12px]">
+            <span className="font-bold text-black">Quantity (max 5)</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                disabled={qty <= 1}
+                className="gloss-silver h-7 w-7 text-[14px] font-bold cursor-pointer disabled:opacity-40"
+              >
+                -
+              </button>
+              <span className="w-6 text-center text-[14px] font-bold">
+                {qty}
+              </span>
+              <button
+                type="button"
+                onClick={() => setQty((q) => Math.min(maxAllowed, q + 1))}
+                disabled={qty >= maxAllowed}
+                className="gloss-silver h-7 w-7 text-[14px] font-bold cursor-pointer disabled:opacity-40"
+              >
+                +
+              </button>
             </div>
-
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={() => setQty((q) => Math.min(maxAllowed, q + 1))}
-              disabled={!selectedTicket || qty >= maxAllowed || isPending}
-              aria-label="Tambah jumlah tiket"
-            >
-              <Plus className="w-4 h-4" />
-            </Button>
           </div>
+        )}
+
+        <div className="mb-3 flex items-center justify-between text-[14px]">
+          <span className="font-semibold text-[#5a5a5a]">Total</span>
+          <span className="text-[18px] font-bold text-black">
+            {totalAmount === 0 && !allSoldOut
+              ? "Free"
+              : formatRupiah(totalAmount)}
+          </span>
         </div>
 
-        {/* Live Total Price Summary */}
-        <div className="rounded-xl bg-cloud-subtle border-2 border-ink p-4 flex items-center justify-between">
-          <div>
-            <span className="font-mono text-[11px] uppercase tracking-widest text-ink-muted block">
-              TOTAL PEMBAYARAN (SIMULASI)
-            </span>
-            <span className="font-mono text-xs text-ink-muted">
-              {selectedTicket
-                ? `${qty}x ${selectedTicket.name}`
-                : "Pilih jenis tiket"}
-            </span>
-          </div>
-
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div
-              key={totalAmount}
-              initial={prefersReducedMotion ? false : { y: -8, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="font-mono text-xl sm:text-2xl font-extrabold text-denim"
-            >
-              {formatRupiah(totalAmount)}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <Button
+        <button
           type="submit"
-          size="lg"
-          className="w-full text-base"
-          disabled={
-            allSoldOut ||
-            !selectedTicket ||
-            selectedTicket.remaining === 0 ||
-            isPending
-          }
+          disabled={allSoldOut || isPending || !selectedTicket || maxAllowed === 0}
+          className="gloss-orange w-full py-2.5 text-[16px] font-bold inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
           {isPending ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Mencetak Tiketmu...
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Processing...
             </>
-          ) : allSoldOut ||
-            (selectedTicket && selectedTicket.remaining === 0) ? (
-            "Habis Terjual (Sold Out)"
+          ) : allSoldOut ? (
+            "Sold Out"
           ) : isLoggedIn ? (
-            <>
-              <TicketIcon className="w-5 h-5" />
-              Beli Tiket Sekarang
-            </>
+            "Buy Ticket »"
           ) : (
-            <>
-              <TicketIcon className="w-5 h-5" />
-              Beli Tiket (Masuk Dulu)
-            </>
+            "Sign In to Buy »"
           )}
-        </Button>
+        </button>
 
-        <p className="flex items-center justify-center gap-1.5 font-mono text-[11px] text-ink-muted text-center">
-          <ShieldCheck className="w-3.5 h-3.5 text-denim shrink-0" />
-          <span>Tiket aman, kuota dikunci otomatis saat tombol ditekan.</span>
+        <p className="mt-2 text-center text-[11px] text-[#5a5a5a]">
+          Instant QR pass generated after checkout.
         </p>
+
+        <div className="mt-3 flex items-center justify-center gap-2 border-t border-[#d8eaf6] pt-2.5">
+          {[1, 2, 3, 4].map((n) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={n}
+              src={`/newtix/home/1_Ticket/PaymentIcon_${n}.png`}
+              alt=""
+              style={{ height: 28, width: "auto" }}
+            />
+          ))}
+        </div>
       </form>
     </div>
   );

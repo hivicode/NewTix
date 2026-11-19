@@ -1,5 +1,5 @@
-import { Navbar } from "@/components/shared/navbar";
-import { Footer } from "@/components/shared/footer";
+import { KKHeader } from "@/components/kk/header";
+import { KKFooter } from "@/components/kk/footer";
 import { getCurrentUserAndProfile } from "@/lib/queries";
 
 export default async function AppMemberLayout({
@@ -11,10 +11,13 @@ export default async function AppMemberLayout({
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar user={user} profile={profile} />
-      <div className="flex-1">{children}</div>
-      <Footer />
+      <div className="kk kk-fade">
+        <KKHeader user={user} profile={profile} />
+      </div>
+      <div className="flex-1 kk-page">{children}</div>
+      <div className="kk">
+        <KKFooter />
+      </div>
     </div>
   );
 }
-

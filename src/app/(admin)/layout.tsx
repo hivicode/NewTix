@@ -31,8 +31,8 @@ export default async function AdminLayout({
             </div>
           </div>
 
-          <div className="rounded-xl border-2 border-ink bg-cloud-subtle p-3 font-mono text-xs">
-            <div className="flex items-center gap-1.5 text-denim font-bold uppercase">
+          <div className="rounded-xl border-2 border-ink bg-cloud-subtle p-3 text-xs">
+            <div className="flex items-center gap-1.5 text-denim font-bold">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>ADMIN NEWTIX</span>
             </div>
@@ -41,7 +41,7 @@ export default async function AdminLayout({
             </p>
           </div>
 
-          <nav className="space-y-1.5 font-mono text-xs font-bold uppercase tracking-wider">
+          <nav className="space-y-1.5 text-xs font-bold">
             <Link
               href="/admin"
               className="flex items-center gap-2.5 rounded-lg px-3.5 py-3 border-2 border-ink bg-background hover:bg-denim hover:text-white transition-colors min-h-[44px]"
@@ -69,7 +69,7 @@ export default async function AdminLayout({
         <div className="pt-6 mt-6 border-t-2 border-dashed border-ink/25 flex items-center justify-between">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-denim min-h-[44px]"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-ink hover:text-denim min-h-[44px]"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Ke Halaman Publik

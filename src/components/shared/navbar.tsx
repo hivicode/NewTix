@@ -12,8 +12,6 @@ import {
   User as UserIcon,
   QrCode,
 } from "lucide-react";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { NewTixLogo } from "@/components/shared/y2k-stickers";
 import { Button } from "@/components/ui/button";
 import { signOutAction } from "@/actions/auth";
 import type { Profile } from "@/types/database";
@@ -49,52 +47,52 @@ export function Navbar({ user, profile }: NavbarProps) {
   const isAdmin = profile?.role === "admin";
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b-2 border-ink bg-background/95 backdrop-blur-xs">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-18">
+    <header className="sticky top-0 z-40 w-full bg-white bevel-header">
+      <div className="mx-auto flex max-w-[1465px] items-center justify-between px-5 sm:px-12 h-[54px]">
         {/* Brand Logo */}
         <div className="flex items-center gap-6">
           <Link href="/" className="group inline-flex items-center">
-            <NewTixLogo />
+            <span className="leading-none"><span className="block text-[19px] font-bold italic tracking-tight text-[#5b4fc4]" style={{fontStyle:"italic"}}>NewTix<span className="text-denim"> Tickets</span></span><span className="block text-[9px] font-semibold text-ink-muted">your pass to every show</span></span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1.5">
             <Link
               href="/events"
               className={cn(
-                "px-3.5 py-2 rounded-full font-mono text-xs uppercase tracking-wider font-bold transition-colors min-h-[40px] inline-flex items-center border-2",
+                "px-2.5 py-2 text-[13px] font-semibold hover:opacity-55 transition-colors min-h-[40px] inline-flex items-center border-2",
                 pathname.startsWith("/events")
-                  ? "bg-denim text-white border-ink poster-shadow-sm"
+                  ? "border-transparent text-denim underline"
                   : "border-transparent text-ink hover:bg-cloud-subtle"
               )}
             >
-              Jelajah Acara
+              Events
             </Link>
             {user && (
               <Link
                 href="/my-tickets"
                 className={cn(
-                  "px-3.5 py-2 rounded-full font-mono text-xs uppercase tracking-wider font-bold transition-colors min-h-[40px] inline-flex items-center gap-1.5 border-2",
+                  "px-2.5 py-2 text-[13px] font-semibold hover:opacity-55 transition-colors min-h-[40px] inline-flex items-center gap-1.5 border-2",
                   pathname.startsWith("/my-tickets")
-                    ? "bg-bubblegum text-[#14121F] border-ink poster-shadow-sm"
+                    ? "border-transparent text-denim underline"
                     : "border-transparent text-ink hover:bg-cloud-subtle"
                 )}
               >
                 <QrCode className="w-3.5 h-3.5 text-denim" />
-                Tiketku
+                My Tickets
               </Link>
             )}
             {isAdmin && (
               <Link
                 href="/admin"
                 className={cn(
-                  "px-3.5 py-2 rounded-full font-mono text-xs uppercase tracking-wider font-bold transition-colors min-h-[40px] inline-flex items-center gap-1.5 border-2",
+                  "px-2.5 py-2 text-[13px] font-semibold hover:opacity-55 transition-colors min-h-[40px] inline-flex items-center gap-1.5 border-2",
                   pathname.startsWith("/admin")
-                    ? "bg-butter text-[#14121F] border-ink poster-shadow-sm"
+                    ? "border-transparent text-denim underline"
                     : "border-transparent text-denim hover:bg-cloud-subtle"
                 )}
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
-                Ruang Admin
+                Admin
               </Link>
             )}
           </nav>
@@ -102,8 +100,6 @@ export function Navbar({ user, profile }: NavbarProps) {
 
         {/* Right Controls */}
         <div className="flex items-center gap-2.5">
-          <ThemeToggle />
-
           {user ? (
             <div className="relative" ref={dropdownRef}>
               <button
@@ -122,15 +118,15 @@ export function Navbar({ user, profile }: NavbarProps) {
                     className="w-6.5 h-6.5 rounded-full object-cover border border-ink"
                   />
                 ) : (
-                  <span className="inline-flex items-center justify-center w-6.5 h-6.5 rounded-full bg-bubblegum text-[#14121F] font-mono text-xs font-bold border border-ink">
+                  <span className="inline-flex items-center justify-center w-6.5 h-6.5 rounded-full bg-bubblegum text-[#14121F] text-xs font-bold border border-ink">
                     {initials}
                   </span>
                 )}
-                <span className="hidden sm:inline font-mono text-xs font-bold truncate max-w-[130px]">
+                <span className="hidden sm:inline text-xs font-bold truncate max-w-[130px]">
                   {displayName}
                 </span>
                 {isAdmin && (
-                  <span className="hidden lg:inline rounded-full bg-butter text-[#14121F] border border-ink font-mono text-[10px] px-2 py-0.5 uppercase font-bold">
+                  <span className="hidden lg:inline rounded-full bg-butter text-[#14121F] border border-ink text-[10px] px-2 py-0.5 font-bold">
                     ADMIN
                   </span>
                 )}
@@ -140,26 +136,26 @@ export function Navbar({ user, profile }: NavbarProps) {
                 <div className="absolute right-0 mt-2 w-60 rounded-lg border-2 border-ink bg-card p-2 poster-shadow z-50">
                   <div className="px-3 py-2 border-b border-dashed border-ink/25 mb-1">
                     <p className="font-bold text-sm truncate">{displayName}</p>
-                    <p className="font-mono text-[11px] text-ink-muted truncate">
+                    <p className="text-[11px] text-ink-muted truncate">
                       {user.email}
                     </p>
                   </div>
                   <Link
                     href="/my-tickets"
                     onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-xs font-mono uppercase tracking-wider hover:bg-cloud-subtle transition-colors min-h-[44px]"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs hover:bg-cloud-subtle transition-colors min-h-[44px]"
                   >
                     <QrCode className="w-4 h-4 text-denim" />
-                    Album Tiketku
+                    My Tickets
                   </Link>
                   {isAdmin && (
                     <Link
                       href="/admin"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-xs font-mono uppercase tracking-wider text-denim font-bold hover:bg-cloud-subtle transition-colors min-h-[44px]"
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs text-denim font-bold hover:bg-cloud-subtle transition-colors min-h-[44px]"
                     >
                       <ShieldCheck className="w-4 h-4" />
-                      Dashboard Admin
+                      Admin Dashboard
                     </Link>
                   )}
                   <form
@@ -168,10 +164,10 @@ export function Navbar({ user, profile }: NavbarProps) {
                   >
                     <button
                       type="submit"
-                      className="flex w-full items-center gap-2.5 rounded-md px-3 py-2.5 text-xs font-mono uppercase tracking-wider text-destructive hover:bg-destructive/10 transition-colors min-h-[44px] cursor-pointer"
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs text-destructive hover:bg-destructive/10 transition-colors min-h-[44px] cursor-pointer"
                     >
                       <LogOut className="w-4 h-4" />
-                      Keluar Akun
+                      Sign Out
                     </button>
                   </form>
                 </div>
@@ -180,10 +176,10 @@ export function Navbar({ user, profile }: NavbarProps) {
           ) : (
             <div className="hidden sm:flex items-center gap-2">
               <Button asChild variant="outline" size="sm">
-                <Link href="/login">Masuk</Link>
+                <Link href="/login">Sign In</Link>
               </Button>
               <Button asChild size="sm">
-                <Link href="/register">Gabung</Link>
+                <Link href="/register">Join Now</Link>
               </Button>
             </div>
           )}
@@ -208,9 +204,9 @@ export function Navbar({ user, profile }: NavbarProps) {
           <Link
             href="/events"
             onClick={() => setMenuOpen(false)}
-            className="flex items-center justify-between rounded-md border-2 border-ink px-4 py-3 font-mono text-xs font-bold uppercase tracking-wider bg-background"
+            className="flex items-center justify-between rounded-xl border-2 border-ink px-4 py-3 text-xs font-bold bg-background"
           >
-            <span>Jelajah Acara</span>
+            <span>Events</span>
             <span>→</span>
           </Link>
           {user ? (
@@ -218,18 +214,18 @@ export function Navbar({ user, profile }: NavbarProps) {
               <Link
                 href="/my-tickets"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-between rounded-md border-2 border-ink px-4 py-3 font-mono text-xs font-bold uppercase tracking-wider bg-background"
+                className="flex items-center justify-between rounded-xl border-2 border-ink px-4 py-3 text-xs font-bold bg-background"
               >
-                <span>Album Tiketku</span>
+                <span>My Tickets</span>
                 <QrCode className="w-4 h-4 text-denim" />
               </Link>
               {isAdmin && (
                 <Link
                   href="/admin"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-between rounded-md border-2 border-ink px-4 py-3 font-mono text-xs font-bold uppercase tracking-wider bg-denim text-white"
+                  className="flex items-center justify-between rounded-xl border-2 border-ink px-4 py-3 text-xs font-bold bg-denim text-white"
                 >
-                  <span>Ruang Admin</span>
+                  <span>Admin</span>
                   <ShieldCheck className="w-4 h-4" />
                 </Link>
               )}
@@ -247,15 +243,10 @@ export function Navbar({ user, profile }: NavbarProps) {
                 </Link>
               </Button>
               <Button asChild onClick={() => setMenuOpen(false)}>
-                <Link href="/register">Daftar</Link>
+                <Link href="/register">Register</Link>
               </Button>
             </div>
           )}
-
-          <div className="flex items-center justify-between pt-3 border-t-2 border-dashed border-ink/20 font-mono text-xs text-ink-muted">
-            <span className="font-bold uppercase tracking-wider text-ink">Mode Tampilan</span>
-            <ThemeToggle />
-          </div>
         </div>
       )}
     </header>

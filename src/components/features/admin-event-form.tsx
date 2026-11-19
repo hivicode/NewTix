@@ -54,12 +54,12 @@ export function AdminEventForm({
       className="rounded-2xl border-2 border-ink bg-card p-6 sm:p-8 poster-shadow space-y-5"
     >
       <div className="border-b-2 border-dashed border-ink/25 pb-4">
-        <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+        <span className="text-xs font-bold text-denim block">
           {mode === "create"
             ? "BUAT ACARA BARU"
             : `PERBARUI ACARA // ${event?.slug}`}
         </span>
-        <h2 className="font-display text-2xl font-extrabold tracking-tight">
+        <h2 className="font-display text-2xl font-semibold tracking-tight">
           Detail Panggung & Jadwal
         </h2>
       </div>
@@ -67,7 +67,7 @@ export function AdminEventForm({
       {state.error && (
         <div
           role="alert"
-          className="rounded-md border-2 border-destructive bg-destructive/10 p-3.5 font-mono text-xs text-destructive flex items-start gap-2"
+          className="rounded-xl border-2 border-destructive bg-destructive/10 p-3.5 text-xs text-destructive flex items-start gap-2"
         >
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{state.error}</span>
@@ -77,7 +77,7 @@ export function AdminEventForm({
       {state.success && (
         <div
           role="status"
-          className="rounded-md border-2 border-ink bg-mint text-[#14121F] p-3.5 font-mono text-xs flex items-start gap-2"
+          className="rounded-xl border-2 border-ink bg-mint text-[#14121F] p-3.5 text-xs flex items-start gap-2"
         >
           <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{state.success}</span>
@@ -95,7 +95,7 @@ export function AdminEventForm({
             required
           />
           {state.fieldErrors?.title && (
-            <p className="font-mono text-xs text-destructive">
+            <p className="text-xs text-destructive">
               {state.fieldErrors.title[0]}
             </p>
           )}
@@ -107,7 +107,7 @@ export function AdminEventForm({
             id="category_id"
             name="category_id"
             defaultValue={event?.category_id || categories[0]?.id}
-            className="flex min-h-[44px] w-full rounded-md border-2 border-ink bg-card px-3.5 py-2 text-sm text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-denim"
+            className="flex min-h-[44px] w-full rounded-xl border-2 border-ink bg-card px-3.5 py-2 text-sm text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-denim"
           >
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -123,7 +123,7 @@ export function AdminEventForm({
             id="status"
             name="status"
             defaultValue={event?.status || "published"}
-            className="flex min-h-[44px] w-full rounded-md border-2 border-ink bg-card px-3.5 py-2 text-sm text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-denim"
+            className="flex min-h-[44px] w-full rounded-xl border-2 border-ink bg-card px-3.5 py-2 text-sm text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-denim"
           >
             <option value="published">Published (Tayang di Katalog)</option>
             <option value="draft">Draft (Sembunyikan)</option>
@@ -206,7 +206,7 @@ export function AdminEventForm({
       {/* Initial Ticket Type section when creating new event */}
       {mode === "create" && (
         <div className="border-t-2 border-dashed border-ink/25 pt-5 mt-5 space-y-4">
-          <h3 className="font-display text-lg font-extrabold">
+          <h3 className="font-display text-lg font-semibold">
             Tiket Gelombang Pertama (Otomatis Dibuat)
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -275,10 +275,10 @@ export function AdminTicketTypesManager({
   return (
     <div className="rounded-2xl border-2 border-ink bg-card p-6 sm:p-8 poster-shadow space-y-6">
       <div className="border-b-2 border-dashed border-ink/25 pb-4">
-        <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+        <span className="text-xs font-bold text-denim block">
           KUOTA & HARGA TIKET
         </span>
-        <h2 className="font-display text-2xl font-extrabold tracking-tight">
+        <h2 className="font-display text-2xl font-semibold tracking-tight">
           Kelola Jenis Tiket ({ticketTypes.length})
         </h2>
       </div>
@@ -291,10 +291,10 @@ export function AdminTicketTypesManager({
             className="rounded-xl border-2 border-ink bg-background p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
           >
             <div>
-              <p className="font-display text-base font-extrabold text-ink">
+              <p className="font-display text-base font-semibold text-ink">
                 {tt.name}
               </p>
-              <p className="font-mono text-xs text-ink-muted">
+              <p className="text-xs text-ink-muted">
                 Harga:{" "}
                 <strong className="text-ink">{formatRupiah(tt.price)}</strong> •
                 Sisa Kuota:{" "}
@@ -322,15 +322,15 @@ export function AdminTicketTypesManager({
         className="border-t-2 border-dashed border-ink/25 pt-5 space-y-4"
       >
         <input type="hidden" name="event_id" value={eventId} />
-        <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-ink">
+        <h3 className="text-xs font-bold text-ink">
           + Tambah Gelombang / Jenis Tiket Baru
         </h3>
 
         {state.error && (
-          <p className="font-mono text-xs text-destructive">{state.error}</p>
+          <p className="text-xs text-destructive">{state.error}</p>
         )}
         {state.success && (
-          <p className="font-mono text-xs text-denim font-bold">
+          <p className="text-xs text-denim font-bold">
             {state.success}
           </p>
         )}

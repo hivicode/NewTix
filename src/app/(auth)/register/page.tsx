@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { AuthForms } from "@/components/features/auth-forms";
 
 export const metadata: Metadata = {
-  title: "Daftar Member Baru",
-  description:
-    "Buat akun NewTix untuk memesan tiket konser, festival, dan lokakarya seru.",
+  title: "Register",
+  description: "Create a NewTix account to book concert and event tickets.",
 };
 
 export default async function RegisterPage({

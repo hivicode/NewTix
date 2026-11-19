@@ -88,29 +88,29 @@ export default async function AdminEventOrdersPage({
       <div>
         <Link
           href="/admin/events"
-          className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-denim min-h-[44px]"
+          className="inline-flex items-center gap-2 text-xs font-bold text-ink hover:text-denim min-h-[44px]"
         >
           <ArrowLeft className="w-4 h-4" />
           Kembali ke Daftar Acara
         </Link>
-        <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block mt-1">
+        <span className="text-xs font-bold text-denim block mt-1">
           DAFTAR TAMU // PEMBELI TIKET
         </span>
-        <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">
           {event.title}
         </h1>
       </div>
 
       <div className="rounded-xl border-2 border-ink bg-card poster-shadow overflow-x-auto">
         {buyers.length === 0 ? (
-          <div className="p-12 text-center font-mono text-xs text-ink-muted">
+          <div className="p-12 text-center text-xs text-ink-muted">
             <UserCheck className="w-8 h-8 text-denim mx-auto mb-2" />
             Belum ada pesanan untuk acara ini di database.
           </div>
         ) : (
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b-2 border-ink bg-cloud-subtle font-mono text-xs uppercase tracking-wider">
+              <tr className="border-b-2 border-ink bg-cloud-subtle text-xs">
                 <th className="p-4">No. Order</th>
                 <th className="p-4">Nama Pembeli</th>
                 <th className="p-4">Waktu Transaksi</th>
@@ -122,11 +122,11 @@ export default async function AdminEventOrdersPage({
             <tbody className="divide-y-2 divide-dashed divide-ink/20 text-sm">
               {buyers.map((b) => (
                 <tr key={b.order_id}>
-                  <td className="p-4 font-mono text-xs font-bold">
+                  <td className="p-4 text-xs font-bold">
                     #{b.order_id.slice(0, 8).toUpperCase()}
                   </td>
                   <td className="p-4 font-bold">{b.buyer_name}</td>
-                  <td className="p-4 font-mono text-xs text-ink-muted">
+                  <td className="p-4 text-xs text-ink-muted">
                     {formatEventDate(b.created_at)} •{" "}
                     {formatEventTime(b.created_at)}
                   </td>
@@ -136,14 +136,14 @@ export default async function AdminEventOrdersPage({
                         <Link
                           key={code}
                           href={`/my-tickets/${code}`}
-                          className="inline-flex items-center gap-1 rounded border border-ink bg-background px-2 py-0.5 font-mono text-xs font-bold hover:bg-butter"
+                          className="inline-flex items-center gap-1 rounded border border-ink bg-background px-2 py-0.5 text-xs font-bold hover:bg-butter"
                         >
                           <QrCode className="w-3 h-3 text-denim" />#{code}
                         </Link>
                       ))}
                     </div>
                   </td>
-                  <td className="p-4 font-mono text-xs font-extrabold text-denim">
+                  <td className="p-4 text-xs font-semibold text-denim">
                     {formatRupiah(b.total_amount)}
                   </td>
                   <td className="p-4">

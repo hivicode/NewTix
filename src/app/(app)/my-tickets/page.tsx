@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { QrCode, Calendar, MapPin, ArrowUpRight, Ticket } from "lucide-react";
 import {
   createClient,
   isServerSupabaseConfigured,
 } from "@/lib/supabase/server";
 import { FALLBACK_EVENTS } from "@/lib/fallback-data";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { BunnyMascot } from "@/components/shared/y2k-stickers";
 import {
   formatEventDate,
   formatEventTime,
   formatRupiah,
-  formatStubDate,
 } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Album Tiketku",
-  description: "Daftar tiket konser dan acara yang sudah kamu amankan di NewTix.",
+  title: "My Tickets",
+  description: "Your NewTix concert and event tickets with instant QR passes.",
 };
 
 interface MemberTicketRow {
@@ -100,14 +95,13 @@ export default async function MyTicketsPage() {
       }
     }
   } else {
-    // Preview sample ticket when Supabase is not yet connected
     const sampleEvent = FALLBACK_EVENTS[0];
     tickets = [
       {
         id: "sample-ticket-1",
         code: "NTX26SIM",
         checked_in_at: null,
-        ticket_type_name: "Presale Gelombang 1",
+        ticket_type_name: "Early Bird",
         ticket_price: 125000,
         event_title: sampleEvent.title,
         event_slug: sampleEvent.slug,
@@ -120,133 +114,124 @@ export default async function MyTicketsPage() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
-      <div className="border-b-2 border-ink pb-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="rounded-full border-2 border-ink bg-butter p-2 poster-shadow-sm hidden sm:block">
-            <BunnyMascot mood="wink" className="w-11 h-11" />
-          </div>
-          <div>
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
-              KOLEKSI TIKET MEMBER // NEWTIX
-            </span>
-            <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mt-1">
-              Album{" "}
-              <span className="font-serif italic font-semibold text-denim">
-                tiketmu.
-              </span>
-            </h1>
-          </div>
-        </div>
-
-        <Button asChild variant="outline">
-          <Link href="/events">Cari Acara Lain →</Link>
-        </Button>
-      </div>
-
-      {tickets.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-ink bg-card p-12 text-center my-8">
-          <Ticket className="w-10 h-10 text-denim mx-auto mb-3 -rotate-12" />
-          <h2 className="font-display text-2xl font-extrabold mb-2">
-            Album tiketmu masih kosong nih!
+    <div className="kk">
+      <main className="mx-auto max-w-[1000px] px-5 py-12 sm:py-16">
+        <div className="section-head">
+          <h2>
+            My <span className="accent">Tickets</span>
           </h2>
-          <p className="text-sm text-ink-muted max-w-md mx-auto mb-6">
-            Yuk cari konser, lokakarya kreatif, atau diskusi seru minggu ini dan
-            kumpulkan tiket pertamamu.
-          </p>
-          <Button asChild>
-            <Link href="/events">Jelajahi Acara Seru</Link>
-          </Button>
+          <p>Keep every QR pass ready for presentation at the gate.</p>
         </div>
-      ) : (
-        <div className="space-y-5">
-          {tickets.map((t) => {
-            const stub = formatStubDate(t.event_starts_at);
-            return (
-              <div
-                key={t.id}
-                className="flex flex-col md:flex-row rounded-xl border-2 border-ink bg-card poster-shadow ticket-notch-horizontal"
+
+        <div className="mt-8 flex justify-end">
+          <Link
+            href="/events"
+            className="gloss-silver px-4 py-2 text-[13px] font-semibold"
+            style={{ textDecoration: "none" }}
+          >
+            Browse More Events &raquo;
+          </Link>
+        </div>
+
+        {tickets.length === 0 ? (
+          <div className="booking-box mt-6 p-10 text-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/newtix/home/5_Map/Pin1.png"
+              alt=""
+              style={{ width: 34, margin: "0 auto 12px", display: "block" }}
+            />
+            <h3 className="text-[18px] font-bold text-black">
+              No tickets yet!
+            </h3>
+            <p className="mt-2 text-[13px] text-[#5a5a5a]">
+              Find a concert, fan meeting, or festival and book your first pass.
+            </p>
+            <div className="mt-5">
+              <Link
+                href="/events"
+                className="gloss-orange inline-block px-5 py-2 text-[14px] font-bold"
+                style={{ textDecoration: "none" }}
               >
-                {/* Date Stub */}
-                <div className="md:w-28 shrink-0 bg-cloud-subtle border-b-2 md:border-b-0 md:border-r-2 border-dashed border-ink/35 p-4 flex md:flex-col items-center justify-between text-center rounded-t-xl md:rounded-tr-none md:rounded-l-xl">
-                  <div>
-                    <span className="font-mono text-xs font-bold text-denim block">
-                      {stub.weekday}
-                    </span>
-                    <span className="font-display text-4xl font-extrabold text-ink leading-none">
-                      {stub.day}
-                    </span>
-                    <span className="font-mono text-xs font-bold text-ink-muted block">
-                      {stub.month}
-                    </span>
-                  </div>
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-ink-muted">
-                    {t.event_city}
-                  </span>
-                </div>
-
-                {/* Main Ticket Info */}
-                <div className="flex-1 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="bubblegum">{t.ticket_type_name}</Badge>
-                      {t.checked_in_at ? (
-                        <Badge variant="ink">SUDAH CHECK-IN</Badge>
-                      ) : (
-                        <Badge variant="mint">AKTIF ★ SIAP SCAN</Badge>
-                      )}
-                      <span className="font-mono text-xs text-ink-muted">
-                        {formatRupiah(t.ticket_price)}
-                      </span>
-                    </div>
-
-                    <Link
-                      href={`/my-tickets/${t.code}`}
-                      className="block group"
-                    >
-                      <h2 className="font-display text-2xl font-extrabold tracking-tight group-hover:text-denim transition-colors">
+                Explore Events &raquo;
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-5 border border-[#c9c9c9] bg-white shadow-[0_2px_6px_rgba(0,0,0,.12)]">
+            <div className="flex items-center justify-between border-b border-[#d9d9d9] bg-[#f4f4f4] px-4 py-2.5 text-[12px] font-bold text-[#2867a6]">
+              <span>PASS LIST ({tickets.length})</span>
+              <span>CLICK TO OPEN QR PASS</span>
+            </div>
+            <div className="divide-y divide-[#e5e5e5]">
+              {tickets.map((t, i) => (
+                <div
+                  key={t.id}
+                  className="flex flex-col gap-4 px-6 py-5 transition-colors hover:bg-[#e7f1fb] sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="flex items-start gap-3.5 min-w-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/newtix/home/5_Map/Pin${(i % 6) + 1}.png`}
+                      alt=""
+                      style={{ width: 22, flexShrink: 0, marginTop: 2 }}
+                    />
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold">
+                        <span className="border border-[#7a7fb0] bg-[#edf9ff] px-2 py-0.5 text-[#2867a6]">
+                          {t.ticket_type_name}
+                        </span>
+                        <span
+                          className={`border px-2 py-0.5 ${
+                            t.checked_in_at
+                              ? "border-[#9a9a9a] bg-[#f4f4f4] text-[#6b6b6b]"
+                              : "border-[#54ac32] bg-[#edf9e8] text-[#2f7d18]"
+                          }`}
+                        >
+                          {t.checked_in_at ? "SCANNED" : "VALID · READY"}
+                        </span>
+                        <span className="text-[#5a5a5a]">
+                          {formatRupiah(t.ticket_price)}
+                        </span>
+                      </div>
+                      <Link
+                        href={`/my-tickets/${t.code}`}
+                        className="mt-1.5 block truncate text-[16px] font-bold text-black hover:text-[#2867a6]"
+                        style={{ textDecoration: "none" }}
+                      >
                         {t.event_title}
-                      </h2>
-                    </Link>
-
-                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-xs text-ink-muted">
-                      <span className="inline-flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-denim" />
-                        {formatEventDate(t.event_starts_at)} •{" "}
-                        {formatEventTime(t.event_starts_at)}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-denim" />
-                        {t.event_venue}, {t.event_city}
-                      </span>
+                      </Link>
+                      <p className="mt-1 text-[12px] text-[#5a5a5a]">
+                        {formatEventDate(t.event_starts_at)} ·{" "}
+                        {formatEventTime(t.event_starts_at)} · {t.event_venue},{" "}
+                        {t.event_city}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Right QR Stub Callout */}
-                  <div className="sm:border-l-2 sm:border-dashed sm:border-ink/25 sm:pl-6 flex sm:flex-col items-center sm:items-end justify-between gap-3 shrink-0">
-                    <div className="text-left sm:text-right">
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-ink-muted block">
-                        KODE TIKET
+                  <div className="flex items-center justify-between gap-4 border-t border-[#e5e5e5] pt-3 sm:border-t-0 sm:pt-0 sm:flex-col sm:items-end shrink-0">
+                    <div className="sm:text-right">
+                      <span className="block text-[10px] font-bold text-[#8a8a8a]">
+                        BOOKING REF
                       </span>
-                      <span className="font-mono text-xl font-extrabold tracking-wider text-denim">
+                      <span className="text-[15px] font-bold tracking-wider text-[#2867a6]">
                         #{t.code}
                       </span>
                     </div>
-
-                    <Button asChild size="sm">
-                      <Link href={`/my-tickets/${t.code}`}>
-                        <QrCode className="w-4 h-4" />
-                        <span>Buka QR</span>
-                        <ArrowUpRight className="w-4 h-4" />
-                      </Link>
-                    </Button>
+                    <Link
+                      href={`/my-tickets/${t.code}`}
+                      className="gloss-orange px-4 py-1.5 text-[13px] font-bold"
+                      style={{ textDecoration: "none" }}
+                    >
+                      Open QR &raquo;
+                    </Link>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </main>
+              ))}
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
   );
 }

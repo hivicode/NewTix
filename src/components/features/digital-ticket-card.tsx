@@ -2,29 +2,18 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
 import { QRCodeSVG } from "qrcode.react";
 import {
   ArrowLeft,
-  Calendar,
+  Ban,
+  Backpack,
   Clock,
-  MapPin,
+  FileText,
+  IdCard,
   Printer,
-  User,
+  Ticket,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  BunnyMascot,
-  NewTixLogo,
-  Y2KStarSticker,
-} from "@/components/shared/y2k-stickers";
-import {
-  formatEventDate,
-  formatEventTime,
-  formatRupiah,
-  formatStubDate,
-} from "@/lib/utils";
+import { formatEventDate, formatEventTime } from "@/lib/utils";
 
 export interface DigitalTicketData {
   code: string;
@@ -44,6 +33,18 @@ export interface DigitalTicketData {
   sibling_codes: string[];
 }
 
+const abbr = (s: string) =>
+  (s.replace(/[^A-Za-z]/g, "").slice(0, 3) || "NTX").toUpperCase();
+
+const reminders = [
+  [Clock, "DOORS", "Doors open at the time printed on this pass."],
+  [Ticket, "PASS", "Please print out this pass or show it on your phone."],
+  [IdCard, "ID", "Bring the ID that matches the name on the ticket."],
+  [Backpack, "BAG", "Keep your bag small. Security check at the gate."],
+  [Ban, "REFUND", "Every ticket is final. Sorry, no cancellations."],
+  [FileText, "NOTES", "We've been waiting for you. See you there!"],
+] as const;
+
 export function DigitalTicketCard({
   ticket,
   justPurchased = false,
@@ -51,317 +52,160 @@ export function DigitalTicketCard({
   ticket: DigitalTicketData;
   justPurchased?: boolean;
 }) {
-  const prefersReducedMotion = useReducedMotion();
-  const stub = formatStubDate(ticket.event_starts_at);
-
-  const confettiPieces = React.useMemo(
-    () =>
-      Array.from({ length: 18 }, (_, i) => ({
-        id: i,
-        x: (i % 2 === 0 ? 1 : -1) * (25 + ((i * 19) % 140)),
-        y: -40 - ((i * 23) % 110),
-        rotate: (i * 47) % 360,
-        color:
-          i % 4 === 0
-            ? "#3F6FD9"
-            : i % 4 === 1
-            ? "#FF9ECF"
-            : i % 4 === 2
-            ? "#FFE98A"
-            : "#9FE8C8",
-      })),
-    []
-  );
-
   const qrPayload = JSON.stringify({
     newtix_code: ticket.code,
     event: ticket.event_slug,
     holder: ticket.holder_name,
   });
-
-  // Deterministic barcode bars based on ticket.code
-  const barcodeBars = React.useMemo(() => {
-    const seed = ticket.code
-      .split("")
-      .reduce((acc, ch, idx) => acc + ch.charCodeAt(0) * (idx + 1), 0);
-    return Array.from({ length: 38 }, (_, i) => {
-      const w = ((seed + i * 7) % 3) + 1;
-      return w;
-    });
-  }, [ticket.code]);
+  const date = new Date(ticket.event_starts_at);
+  const ymd = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
 
   return (
-    <div className="relative max-w-2xl mx-auto">
-      {/* Confetti Burst when justPurchased */}
-      {justPurchased && !prefersReducedMotion && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-6 flex justify-center z-30 overflow-visible"
-        >
-          {confettiPieces.map((piece) => (
-            <motion.span
-              key={piece.id}
-              initial={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
-              animate={{
-                opacity: 0,
-                x: piece.x,
-                y: piece.y,
-                rotate: piece.rotate,
-                scale: 0.6,
-              }}
-              transition={{ duration: 1.25, ease: "easeOut" }}
-              style={{ backgroundColor: piece.color }}
-              className="absolute w-3.5 h-3.5 rounded-full border border-[#14121F]"
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Success Banner with Bunny Mascot */}
+    <div className="mx-auto max-w-[820px] px-4 py-10 text-[#1b1b1b]">
       {justPurchased && (
-        <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 rounded-2xl border-2 border-ink bg-mint text-[#14121F] p-4 sm:p-5 poster-shadow-sm flex items-center justify-between gap-4"
-        >
-          <div className="flex items-center gap-3.5">
-            <div className="rounded-full border-2 border-[#14121F] bg-white p-1.5 shrink-0">
-              <BunnyMascot mood="wink" className="w-11 h-11" />
-            </div>
-            <div>
-              <p className="font-mono text-xs font-bold uppercase tracking-widest text-denim">
-                YAY! TIKET BERHASIL DICETAK ★
-              </p>
-              <p className="text-sm font-bold">
-                Tiketmu sudah aman di kantong! Simpan halaman ini atau langsung
-                tunjukkan QR di pintu masuk venue.
-              </p>
-            </div>
-          </div>
-          <Y2KStarSticker
-            className="w-7 h-7 shrink-0 hidden sm:block"
-            color="#FFE98A"
-          />
-        </motion.div>
+        <div className="mb-5 border border-[#54ac32] bg-[#edf9e8] px-4 py-3 text-[13px] font-semibold text-[#2f7d18] print:hidden">
+          Your ticket is ready! Save this page or show the QR code at the gate.
+        </div>
       )}
 
-      {/* Ticket Dispense Animation (Slide out of machine + subtle wobble) */}
-      <motion.div
-        initial={
-          justPurchased && !prefersReducedMotion
-            ? { y: -70, opacity: 0, rotate: -2 }
-            : prefersReducedMotion
-            ? false
-            : { y: 16, opacity: 0 }
-        }
-        animate={{ y: 0, opacity: 1, rotate: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 220,
-          damping: 18,
-        }}
-        className="rounded-2xl border-2 border-ink bg-card poster-shadow overflow-hidden print:shadow-none"
-      >
-        {/* Top Denim Header Band */}
-        <div className="bg-denim text-white px-6 py-4 flex items-center justify-between border-b-2 border-ink">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-white px-2.5 py-1 border-2 border-[#14121F]">
-              <NewTixLogo size="sm" className="text-[#14121F]" />
-            </div>
-            <div className="hidden sm:block">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-butter block font-bold">
-                OFFICIAL Y2K CONCERT PASS
-              </span>
-              <span className="font-mono text-[11px] text-white/90">
-                SATU KALI PINDAI DI PINTU
-              </span>
-            </div>
-          </div>
-
-          <div className="text-right font-mono">
-            <span className="text-[10px] uppercase tracking-widest text-butter block font-bold">
-              SERI TIKET
-            </span>
-            <span className="text-lg font-extrabold tracking-wider text-white">
-              #{ticket.code}
-            </span>
-          </div>
-        </div>
-
-        {/* Main Body */}
-        <div className="p-6 sm:p-8 relative">
-          {/* Decorative Bunny Stamp on Ticket Corner */}
-          <div className="hidden sm:flex items-center gap-1.5 absolute top-6 right-6 rounded-full border-2 border-ink bg-butter text-[#14121F] px-3 py-1 font-mono text-[10px] font-bold rotate-3 sticker-shadow">
-            <BunnyMascot mood="happy" className="w-5 h-5 -my-1" />
-            <span>VERIFIED PASS</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 mb-4">
-            <Badge variant="bubblegum">{ticket.ticket_type_name}</Badge>
-            {ticket.checked_in_at ? (
-              <Badge variant="ink" sticker>
-                SUDAH DIPINDAI MASUK
-              </Badge>
-            ) : (
-              <Badge variant="mint" sticker>
-                AKTIF ★ SIAP MASUK
-              </Badge>
-            )}
-          </div>
-
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight text-ink mb-6">
-            {ticket.event_title}
-          </h1>
-
-          {/* Stub Date + Venue Box */}
-          <div className="grid grid-cols-1 sm:grid-cols-12 rounded-xl border-2 border-ink bg-cloud-subtle mb-6 overflow-hidden">
-            <div className="sm:col-span-3 border-b-2 sm:border-b-0 sm:border-r-2 border-dashed border-ink/35 p-4 flex sm:flex-col items-center justify-center text-center bg-butter/40">
-              <span className="font-mono text-xs font-bold uppercase text-denim">
-                {stub.weekday}
-              </span>
-              <span className="font-display text-4xl font-extrabold text-ink mx-2 sm:mx-0">
-                {stub.day}
-              </span>
-              <span className="font-mono text-xs font-bold uppercase text-ink-muted">
-                {stub.month}
-              </span>
-            </div>
-
-            <div className="sm:col-span-9 p-4 space-y-2 font-mono text-xs">
-              <div className="flex items-start gap-2">
-                <Calendar className="w-4 h-4 text-denim shrink-0 mt-0.5" />
-                <div>
-                  <span className="text-ink-muted block text-[10px] uppercase">
-                    TANGGAL ACARA
-                  </span>
-                  <span className="font-bold text-ink">
-                    {formatEventDate(ticket.event_starts_at)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Clock className="w-4 h-4 text-denim shrink-0 mt-0.5" />
-                <div>
-                  <span className="text-ink-muted block text-[10px] uppercase">
-                    WAKTU PINTU
-                  </span>
-                  <span className="font-bold text-ink">
-                    {formatEventTime(ticket.event_starts_at)} —{" "}
-                    {formatEventTime(ticket.event_ends_at)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-denim shrink-0 mt-0.5" />
-                <div>
-                  <span className="text-ink-muted block text-[10px] uppercase">
-                    LOKASI VENUE
-                  </span>
-                  <span className="font-bold text-ink">
-                    {ticket.event_venue}, {ticket.event_city}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Holder & Price Info */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono text-xs pb-6">
-            <div>
-              <span className="text-[10px] uppercase tracking-widest text-ink-muted block">
-                PEMEGANG TIKET
-              </span>
-              <span className="font-bold text-ink flex items-center gap-1.5 mt-0.5 truncate">
-                <User className="w-3.5 h-3.5 text-denim shrink-0" />
-                <span className="truncate">{ticket.holder_name}</span>
-              </span>
-            </div>
-
-            <div>
-              <span className="text-[10px] uppercase tracking-widest text-ink-muted block">
-                HARGA TERCETAK
-              </span>
-              <span className="font-bold text-ink block mt-0.5">
-                {formatRupiah(ticket.ticket_price)}
-              </span>
-            </div>
-
-            <div className="col-span-2 sm:col-span-1">
-              <span className="text-[10px] uppercase tracking-widest text-ink-muted block">
-                NO. ORDER
-              </span>
-              <span className="font-bold text-ink block mt-0.5">
-                #{ticket.order_id.slice(0, 8).toUpperCase()}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Perforated Tear Line */}
-        <div className="relative flex items-center justify-between border-t-2 border-dashed border-ink/40 bg-cloud-subtle px-6 py-8 ticket-notch-horizontal">
-          <div className="flex flex-col sm:flex-row items-center gap-6 w-full">
-            {/* QR Code Box */}
-            <div className="rounded-xl border-2 border-[#14121F] bg-white p-3.5 poster-shadow-sm shrink-0">
-              <QRCodeSVG
-                value={qrPayload}
-                size={136}
-                bgColor="#FFFFFF"
-                fgColor="#14121F"
-                level="M"
-              />
-            </div>
-
-            {/* Code & Faux Barcode */}
-            <div className="flex-1 text-center sm:text-left space-y-3 w-full">
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-muted block">
-                  KODE VERIFIKASI PINTU (8-DIGIT)
-                </span>
-                <span className="font-mono text-3xl sm:text-4xl font-extrabold tracking-[0.18em] text-denim">
-                  {ticket.code}
-                </span>
-              </div>
-
-              {/* Decorative Barcode Graphic */}
-              <div
-                aria-hidden="true"
-                className="flex items-center justify-center sm:justify-start gap-[2px] h-10 py-1 overflow-hidden"
+      {/* PASS */}
+      <div className="bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,.18)] print:shadow-none sm:p-8">
+        {/* top */}
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="leading-none">
+              <span
+                className="block text-[30px] font-extrabold tracking-tight text-[#5b4fc4]"
+                style={{ fontStyle: "italic" }}
               >
-                {barcodeBars.map((w, idx) => (
-                  <span
-                    key={idx}
-                    style={{ width: `${w * 2}px` }}
-                    className="h-full bg-ink inline-block"
-                  />
-                ))}
-              </div>
-
-              <p className="font-mono text-[11px] text-ink-muted">
-                Tunjukkan kode QR ini kepada petugas di pintu masuk{" "}
-                <strong>{ticket.event_venue}</strong>.
-              </p>
+                New<span className="text-[#2a7ac0]">Tix</span>
+                <span className="align-top text-[14px] not-italic text-[#f5b301]"> ★</span>
+              </span>
+              <span className="mt-1 block text-[9px] font-bold tracking-[2.4px] text-[#5f6b76]">
+                ONLINE TICKETING
+              </span>
+            </div>
+            <h1 className="mt-6 text-[26px] font-bold text-[#2a4fa0]">E-Ticket pass</h1>
+          </div>
+          <div className="text-right">
+            <p className="text-[11px] text-[#5f6b76]">www.newtix.id</p>
+            <div className="mt-1 inline-block bg-white p-1">
+              <QRCodeSVG value={qrPayload} size={92} bgColor="#FFFFFF" fgColor="#000000" level="M" />
             </div>
           </div>
         </div>
-      </motion.div>
 
-      {/* Sibling tickets if user bought > 1 ticket in the same order */}
-      {ticket.sibling_codes.length > 1 && (
-        <div className="mt-6 rounded-xl border-2 border-ink bg-card p-4 font-mono text-xs">
-          <span className="font-bold uppercase tracking-wider text-ink block mb-2">
-            Tiket Lain dalam Pesanan Ini ({ticket.sibling_codes.length} Tiket):
+        {/* main box */}
+        <div className="mt-4 border border-[#7a7fb0]">
+          <div className="px-4 py-3 text-[18px] font-bold">
+            <span className="mr-3 text-[#2a4fa0]">Name</span>
+            {ticket.holder_name}
+          </div>
+          <div className="flex items-center justify-between gap-3 bg-[#e6e6e6] px-5 py-4">
+            <div className="min-w-0">
+              <p className="text-[11px] font-bold text-[#2a4fa0]">VENUE</p>
+              <p className="text-[40px] font-light leading-none">{abbr(ticket.event_venue)}</p>
+              <p className="mt-1 truncate text-[12px] text-[#6b6b6b]">{ticket.event_venue}</p>
+            </div>
+            <Ticket className="h-9 w-9 shrink-0 text-[#9a9a9a]" strokeWidth={1.4} />
+            <div className="min-w-0 text-right">
+              <p className="text-[11px] font-bold text-[#2a4fa0]">CITY</p>
+              <p className="text-[40px] font-bold leading-none">{abbr(ticket.event_city)}</p>
+              <p className="mt-1 truncate text-[12px] text-[#6b6b6b]">{ticket.event_city}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3 px-4 py-3 text-[13px] sm:grid-cols-4">
+            <div>
+              <p className="text-[11px] font-bold text-[#2a4fa0]">Date</p>
+              <p className="font-semibold">{ymd}</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-[#2a4fa0]">Doors</p>
+              <p className="font-semibold">{formatEventTime(ticket.event_starts_at)}</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-[#2a4fa0]">Ticket Type</p>
+              <p className="font-semibold">{ticket.ticket_type_name}</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-[#2a4fa0]">Booking Ref</p>
+              <p className="font-semibold tracking-wider">{ticket.code}</p>
+            </div>
+          </div>
+          <div className="flex items-end justify-between gap-3 px-4 pb-3 pt-1">
+            <p className="text-[10px] font-bold tracking-wide">
+              {ticket.event_title.toUpperCase()} · {formatEventDate(ticket.event_starts_at).toUpperCase()}
+            </p>
+            <span
+              className={`shrink-0 border px-2 py-0.5 text-[10px] font-bold ${
+                ticket.checked_in_at
+                  ? "border-[#9a9a9a] text-[#6b6b6b]"
+                  : "border-[#54ac32] text-[#2f7d18]"
+              }`}
+            >
+              {ticket.checked_in_at ? "SCANNED" : "VALID"}
+            </span>
+          </div>
+        </div>
+
+        {/* reminders */}
+        <div className="mt-6 grid gap-5 sm:grid-cols-[1fr_230px]">
+          <div>
+            <h2 className="text-[15px] font-bold tracking-wide text-[#2a4fa0]">IMPORTANT REMINDERS</h2>
+            <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3">
+              {reminders.map(([Icon, label, text]) => (
+                <div key={label}>
+                  <Icon className="h-6 w-6" strokeWidth={1.3} />
+                  <p className="mt-1 text-[11px] font-bold text-[#2a4fa0]">{label}</p>
+                  <p className="text-[10px] font-bold leading-snug">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col justify-between bg-gradient-to-b from-[#1a7bc0] to-[#f5c400] p-4 text-center text-white">
+            <p className="text-[9px]">www.newtix.id/my-tickets</p>
+            <p className="my-3 text-[18px] font-extrabold leading-tight">KEEP ALL YOUR PASSES IN ONE PLACE</p>
+            <p className="bg-white/90 px-2 py-1 text-[10px] font-bold italic text-[#2a4fa0]">
+              Your QR tickets, always with you
+            </p>
+          </div>
+        </div>
+
+        {/* partners */}
+        <div className="mt-6 border border-[#c9c9c9]">
+          <p className="bg-[#ececec] px-3 py-1 text-[10px] font-bold tracking-wide">OUR PARTNERS</p>
+          <div className="grid grid-cols-3 items-center gap-3 p-3 sm:grid-cols-6">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={n} src={`/newtix/home/6_Partners/Partners_${n}.png`} alt="" className="h-8 w-full object-contain" />
+            ))}
+          </div>
+        </div>
+
+        {/* footer bar */}
+        <div className="-mx-6 -mb-6 mt-8 flex items-center justify-between bg-[#2674bd] px-6 py-4 text-white sm:-mx-8 sm:-mb-8 sm:px-8">
+          <div>
+            <p className="text-[13px] font-bold tracking-wide">THANK YOU FOR JOINING US</p>
+            <p className="text-[10px]">Please retain for presentation at the gate.</p>
+          </div>
+          <span className="text-[20px] font-extrabold" style={{ fontStyle: "italic" }}>
+            NewTix<span className="text-[#ffe37a]"> ★</span>
           </span>
+        </div>
+      </div>
+
+      {ticket.sibling_codes.length > 1 && (
+        <div className="mt-5 bg-white p-4 text-[12px] shadow-[0_1px_4px_rgba(0,0,0,.15)] print:hidden">
+          <p className="mb-2 font-bold">
+            Other tickets in this order ({ticket.sibling_codes.length}):
+          </p>
           <div className="flex flex-wrap gap-2">
             {ticket.sibling_codes.map((c) => (
               <Link
                 key={c}
                 href={`/my-tickets/${c}`}
-                className={`px-3 py-1.5 rounded-md border-2 border-ink font-bold ${
-                  c === ticket.code
-                    ? "bg-denim text-white"
-                    : "bg-background text-ink hover:bg-cloud-subtle"
+                className={`px-3 py-1.5 font-bold no-underline ${
+                  c === ticket.code ? "gloss-orange" : "gloss-silver"
                 }`}
               >
                 #{c}
@@ -371,27 +215,17 @@ export function DigitalTicketCard({
         </div>
       )}
 
-      {/* Bottom Action Bar */}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Button asChild variant="outline">
-          <Link href="/my-tickets">
-            <ArrowLeft className="w-4 h-4" />
-            Semua Tiketku
-          </Link>
-        </Button>
-
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 print:hidden">
+        <Link href="/my-tickets" className="gloss-silver inline-flex items-center gap-2 px-4 py-2 text-[13px] font-semibold no-underline">
+          <ArrowLeft className="h-4 w-4" /> All My Tickets
+        </Link>
         <div className="flex items-center gap-2.5">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => window.print()}
-          >
-            <Printer className="w-4 h-4" />
-            Simpan sebagai Gambar / PDF
-          </Button>
-          <Button asChild>
-            <Link href={`/events/${ticket.event_slug}`}>Halaman Acara</Link>
-          </Button>
+          <button type="button" onClick={() => window.print()} className="gloss-silver inline-flex cursor-pointer items-center gap-2 px-4 py-2 text-[13px] font-semibold">
+            <Printer className="h-4 w-4" /> Print / Save PDF
+          </button>
+          <Link href={`/events/${ticket.event_slug}`} className="gloss-orange px-4 py-2 text-[13px] font-bold no-underline">
+            Event Page
+          </Link>
         </div>
       </div>
     </div>

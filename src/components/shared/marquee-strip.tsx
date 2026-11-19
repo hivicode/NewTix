@@ -10,7 +10,7 @@ export function MarqueeStrip() {
 
   return (
     <div className="w-full border-y-2 border-ink bg-denim text-white py-2.5 overflow-hidden select-none">
-      <div className="animate-marquee flex items-center gap-8 font-mono text-xs font-bold uppercase tracking-widest">
+      <div className="animate-marquee flex items-center gap-8 text-xs font-bold">
         {[...items, ...items].map((text, idx) => (
           <div key={idx} className="flex items-center gap-8 shrink-0">
             <span>{text}</span>

@@ -16,12 +16,12 @@ export default async function AdminNewEventPage() {
       <div>
         <Link
           href="/admin/events"
-          className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-ink hover:text-denim min-h-[44px]"
+          className="inline-flex items-center gap-2 text-xs font-bold text-ink hover:text-denim min-h-[44px]"
         >
           <ArrowLeft className="w-4 h-4" />
           Kembali ke Daftar Acara
         </Link>
-        <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">
           Buat Acara{" "}
           <span className="font-serif italic font-semibold text-denim">
             Baru.

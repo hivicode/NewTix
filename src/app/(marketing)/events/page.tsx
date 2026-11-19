@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Search, SlidersHorizontal, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { TicketEventCard } from "@/components/shared/ticket-event-card";
 import { getCategories, getFilteredEvents } from "@/lib/queries";
-import { cn } from "@/lib/utils";
+import { formatEventDate, formatEventTime } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Jelajah Acara & Konser Seru",
+  title: "Events",
   description:
-    "Daftar lengkap konser independen, lokakarya kreatif, diskusi teknologi, dan festival kuliner di NewTix.",
+    "Browse concerts, fan meetings, creative workshops, and festivals on NewTix.",
 };
 
 export default async function EventsDirectoryPage({
@@ -79,253 +75,276 @@ export default async function EventsDirectoryPage({
   }
 
   const hasActiveFilters = Boolean(
-    currentCategory || currentQuery || currentCity || (currentTab && currentTab !== "all")
+    currentCategory ||
+      currentQuery ||
+      currentCity ||
+      (currentTab && currentTab !== "all")
   );
 
   return (
-    <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
-      {/* Header */}
-      <div className="border-b-2 border-ink pb-8 mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-        <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
-            KATALOG ACARA // NEWTIX
-          </span>
-          <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight mt-1">
-            Cari tiket{" "}
-            <span className="font-serif italic font-semibold text-denim">
-              akhir pekanmu.
-            </span>
-          </h1>
+    <div className="kk">
+      <main className="mx-auto max-w-[1160px] px-5 py-12 sm:py-16">
+        <div className="section-head">
+          <h2>
+            Browse <span className="accent">Events</span>
+          </h2>
+          <p>Find concerts, fan meetings, and live shows across every city.</p>
         </div>
 
-        {/* URL Search Form */}
-        <form
-          action="/events"
-          method="GET"
-          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto"
-        >
-          {currentTab && currentTab !== "all" && (
-            <input type="hidden" name="tab" value={currentTab} />
-          )}
-          {currentCategory && (
-            <input type="hidden" name="category" value={currentCategory} />
-          )}
-          {currentCity && (
-            <input type="hidden" name="city" value={currentCity} />
-          )}
-          <div className="relative min-w-[260px] sm:min-w-[320px]">
-            <Search className="w-4 h-4 text-ink-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <Input
+        {/* Retro Filter Box */}
+        <div className="booking-box mt-8 p-4 sm:p-5">
+          <form
+            action="/events"
+            method="GET"
+            className="flex flex-col gap-2.5 sm:flex-row sm:items-center"
+          >
+            {currentTab && currentTab !== "all" && (
+              <input type="hidden" name="tab" value={currentTab} />
+            )}
+            {currentCategory && (
+              <input type="hidden" name="category" value={currentCategory} />
+            )}
+            {currentCity && (
+              <input type="hidden" name="city" value={currentCity} />
+            )}
+            <input
               type="search"
               name="q"
               defaultValue={currentQuery}
-              placeholder="Cari Bunnies Camp, gathering, festival..."
-              className="pl-10"
+              placeholder="Search shows, artists, venues..."
+              className="field-inset !h-[34px] !text-[13px] flex-1"
             />
-          </div>
-          <Button type="submit">Cari Tiket</Button>
-        </form>
-      </div>
+            <button
+              type="submit"
+              className="gloss-orange px-5 py-1.5 text-[14px] font-bold cursor-pointer shrink-0"
+            >
+              Find Tickets &raquo;
+            </button>
+          </form>
 
-      {/* Tab Filter Utama: Semua / Akan Datang (Fan-made) / Arsip */}
-      <div className="mb-6 flex flex-wrap items-center gap-2.5 p-1.5 rounded-2xl border-2 border-ink bg-card poster-shadow-sm w-fit">
-        <Link
-          href={buildFilterHref({ tab: "all", page: 1 })}
-          className={cn(
-            "px-4 py-2 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-2",
-            currentTab === "all" || !currentTab
-              ? "bg-denim text-white border-2 border-ink poster-shadow-sm"
-              : "text-ink hover:bg-cloud-subtle"
-          )}
-        >
-          <span>Semua Acara</span>
-        </Link>
-
-        <Link
-          href={buildFilterHref({ tab: "upcoming", page: 1 })}
-          className={cn(
-            "px-4 py-2 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-2",
-            currentTab === "upcoming"
-              ? "bg-bubblegum text-[#14121F] border-2 border-ink poster-shadow-sm"
-              : "text-ink hover:bg-cloud-subtle"
-          )}
-        >
-          <span>💙 Akan Datang (Fan-made)</span>
-        </Link>
-
-        <Link
-          href={buildFilterHref({ tab: "archive", page: 1 })}
-          className={cn(
-            "px-4 py-2 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-2",
-            currentTab === "archive"
-              ? "bg-butter text-[#14121F] border-2 border-ink poster-shadow-sm"
-              : "text-ink hover:bg-cloud-subtle"
-          )}
-        >
-          <span>🏆 Arsip Resmi (Ended)</span>
-        </Link>
-      </div>
-
-      {/* Category & City Filter Pills (URL as State) */}
-      <div className="space-y-4 mb-10">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-ink-muted mr-2">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-denim" />
-            Kategori:
-          </span>
-
-          <Link
-            href={buildFilterHref({ category: "", page: 1 })}
-            className={cn(
-              "px-3.5 py-2 rounded-full border-2 border-ink font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center",
-              !currentCategory
-                ? "bg-denim text-white poster-shadow-sm"
-                : "bg-card text-ink hover:bg-cloud-subtle"
+          {/* Tabs */}
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-[#d8eaf6] pt-3.5 text-[12px] font-bold">
+            <span className="mr-1 text-[#5a5a5a]">Status:</span>
+            {[
+              ["all", "All Events"],
+              ["upcoming", "Live / Upcoming"],
+              ["archive", "Archive (Ended)"],
+            ].map(([val, label]) => {
+              const active = (currentTab || "all") === val;
+              return (
+                <Link
+                  key={val}
+                  href={buildFilterHref({ tab: val, page: 1 })}
+                  className={`px-3 py-1 ${
+                    active ? "gloss-orange" : "gloss-silver"
+                  }`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+            {hasActiveFilters && (
+              <Link
+                href="/events"
+                className="ml-auto text-[12px] font-semibold text-[#e0584f]"
+              >
+                Clear filters &times;
+              </Link>
             )}
-          >
-            Semua ({result.totalCount})
-          </Link>
-
-          {categories.map((cat) => {
-            const active = currentCategory === cat.slug;
-            return (
-              <Link
-                key={cat.id}
-                href={buildFilterHref({
-                  category: active ? "" : cat.slug,
-                  page: 1,
-                })}
-                className={cn(
-                  "px-3.5 py-2 rounded-full border-2 border-ink font-mono text-xs font-bold uppercase tracking-wider transition-colors min-h-[40px] inline-flex items-center gap-1.5",
-                  active
-                    ? "bg-bubblegum text-[#14121F] poster-shadow-sm"
-                    : "bg-card text-ink hover:bg-cloud-subtle"
-                )}
-              >
-                <span aria-hidden="true">{cat.emoji}</span>
-                <span>{cat.name}</span>
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* City Pills */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-ink-muted mr-2">
-            Kota:
-          </span>
-          {cities.map((city) => {
-            const active = currentCity.toLowerCase() === city.toLowerCase();
-            return (
-              <Link
-                key={city}
-                href={buildFilterHref({
-                  city: active ? "" : city,
-                  page: 1,
-                })}
-                className={cn(
-                  "px-3 py-1.5 rounded-full border border-ink font-mono text-xs uppercase tracking-wider transition-colors min-h-[38px] inline-flex items-center",
-                  active
-                    ? "bg-butter text-[#14121F] font-bold border-2"
-                    : "bg-background text-ink-muted hover:text-ink"
-                )}
-              >
-                {city}
-              </Link>
-            );
-          })}
-
-          {hasActiveFilters && (
-            <Link
-              href="/events"
-              className="ml-auto inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-destructive hover:underline min-h-[38px]"
-            >
-              <X className="w-3.5 h-3.5" />
-              Bersihkan Filter
-            </Link>
-          )}
-        </div>
-      </div>
-
-      {/* Event Grid */}
-      {result.events.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-ink bg-card p-12 text-center my-8">
-          <p className="font-mono text-xs uppercase tracking-widest text-denim mb-2">
-            BELUM KETEMU // 0 HASIL
-          </p>
-          <h2 className="font-display text-2xl font-extrabold mb-2">
-            Belum ada acara yang cocok sama pencarianmu.
-          </h2>
-          <p className="text-sm text-ink-muted max-w-md mx-auto mb-6">
-            Coba ganti kata kunci atau pilih kota dan kategori lainnya ya!
-          </p>
-          <Button asChild variant="outline">
-            <Link href="/events">Tampilkan Semua Acara</Link>
-          </Button>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
-            {result.events.map((event, idx) => (
-              <TicketEventCard key={event.id} event={event} index={idx} />
-            ))}
           </div>
 
-          {/* Pagination via URL searchParams */}
-          {result.totalPages > 1 && (
-            <nav
-              aria-label="Navigasi halaman acara"
-              className="mt-12 pt-8 border-t-2 border-dashed border-ink/25 flex items-center justify-between gap-4"
+          {/* Categories */}
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px]">
+            <span className="mr-1 font-bold text-[#5a5a5a]">Genre:</span>
+            <Link
+              href={buildFilterHref({ category: "", page: 1 })}
+              className={`border px-2.5 py-1 font-semibold ${
+                !currentCategory
+                  ? "border-[#2867a6] bg-[#2867a6] text-white"
+                  : "border-[#c1c1c1] bg-white text-[#1b1b1b] hover:bg-[#edf9ff]"
+              }`}
+              style={{ textDecoration: "none" }}
             >
-              <div className="font-mono text-xs text-ink-muted">
-                Halaman{" "}
-                <strong className="text-ink">{result.currentPage}</strong> dari{" "}
-                <strong className="text-ink">{result.totalPages}</strong> (Total{" "}
-                {result.totalCount} acara)
-              </div>
+              All ({result.totalCount})
+            </Link>
+            {categories.map((cat) => {
+              const active = currentCategory === cat.slug;
+              return (
+                <Link
+                  key={cat.id}
+                  href={buildFilterHref({
+                    category: active ? "" : cat.slug,
+                    page: 1,
+                  })}
+                  className={`border px-2.5 py-1 font-semibold ${
+                    active
+                      ? "border-[#2867a6] bg-[#2867a6] text-white"
+                      : "border-[#c1c1c1] bg-white text-[#1b1b1b] hover:bg-[#edf9ff]"
+                  }`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {cat.name}
+                </Link>
+              );
+            })}
+          </div>
 
-              <div className="flex items-center gap-2">
-                {result.currentPage > 1 && (
-                  <Button asChild variant="outline" size="sm">
+          {/* Cities */}
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[12px]">
+            <span className="mr-1 font-bold text-[#5a5a5a]">City:</span>
+            {cities.map((city) => {
+              const active = currentCity.toLowerCase() === city.toLowerCase();
+              return (
+                <Link
+                  key={city}
+                  href={buildFilterHref({
+                    city: active ? "" : city,
+                    page: 1,
+                  })}
+                  className={`border px-2.5 py-0.5 font-semibold ${
+                    active
+                      ? "border-[#2867a6] bg-[#e7f1fb] text-[#2867a6]"
+                      : "border-[#d6d6d6] bg-white text-[#5a5a5a] hover:bg-[#edf9ff]"
+                  }`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {city}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Results */}
+        {result.events.length === 0 ? (
+          <div className="booking-box mt-8 p-10 text-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/newtix/home/5_Map/Pin4.png"
+              alt=""
+              style={{ width: 34, margin: "0 auto 12px", display: "block" }}
+            />
+            <h3 className="text-[18px] font-bold text-black">
+              No matching events found
+            </h3>
+            <p className="mt-2 text-[13px] text-[#5a5a5a]">
+              Try a different keyword, city, or genre filter.
+            </p>
+            <div className="mt-5">
+              <Link
+                href="/events"
+                className="gloss-orange inline-block px-5 py-2 text-[14px] font-bold"
+                style={{ textDecoration: "none" }}
+              >
+                Show All Events &raquo;
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {result.events.map((e) => {
+                const ended = e.status === "ended";
+                return (
+                  <article
+                    key={e.id}
+                    className={`tour-card${ended ? " is-locked" : ""}`}
+                  >
+                    <div className="tour-img">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={e.cover_url || ""} alt={e.title} />
+                    </div>
+                    <div className="tour-body">
+                      <span className="tour-time">
+                        {formatEventDate(e.starts_at)}
+                      </span>
+                      <span className="tour-name">
+                        <svg
+                          className="pin"
+                          viewBox="0 0 8 12"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M4 0C1.8 0 0 1.8 0 4c0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4Z"
+                            fill="#272727"
+                          />
+                          <circle cx="4" cy="4" r="1.4" fill="#f4f4f4" />
+                        </svg>
+                        {e.title}
+                      </span>
+                      <p className="tour-desc">
+                        <span className="cat">[{e.city}]</span>
+                        {e.venue}
+                        <br />
+                        Doors {formatEventTime(e.starts_at)}
+                      </p>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        className="tour-stars"
+                        src="/newtix/home/2_Schedule/5Stars.png"
+                        alt="5 stars"
+                      />
+                      <Link className="tour-start" href={`/events/${e.slug}`}>
+                        {ended ? "View Archive" : "Get Ticket"}
+                      </Link>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            {result.totalPages > 1 && (
+              <nav
+                aria-label="Events pagination"
+                className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-[#d9d9d9] pt-6 text-[13px]"
+              >
+                <span className="text-[#5a5a5a]">
+                  Page <b>{result.currentPage}</b> of <b>{result.totalPages}</b>{" "}
+                  ({result.totalCount} events)
+                </span>
+                <div className="flex items-center gap-2">
+                  {result.currentPage > 1 && (
                     <Link
                       href={buildFilterHref({ page: result.currentPage - 1 })}
+                      className="gloss-silver px-3 py-1 text-[12px] font-bold"
+                      style={{ textDecoration: "none" }}
                     >
-                      ← Sebelumnya
+                      &laquo; Prev
                     </Link>
-                  </Button>
-                )}
-
-                {Array.from({ length: result.totalPages }, (_, i) => i + 1).map(
-                  (p) => (
+                  )}
+                  {Array.from(
+                    { length: result.totalPages },
+                    (_, i) => i + 1
+                  ).map((p) => (
                     <Link
                       key={p}
                       href={buildFilterHref({ page: p })}
-                      className={cn(
-                        "w-11 h-11 rounded-md border-2 border-ink font-mono text-xs font-bold inline-flex items-center justify-center transition-colors",
+                      className={`px-3 py-1 text-[12px] font-bold ${
                         p === result.currentPage
-                          ? "bg-denim text-white poster-shadow-sm"
-                          : "bg-card text-ink hover:bg-cloud-subtle"
-                      )}
+                          ? "gloss-orange"
+                          : "gloss-silver"
+                      }`}
+                      style={{ textDecoration: "none" }}
                     >
                       {p}
                     </Link>
-                  )
-                )}
-
-                {result.currentPage < result.totalPages && (
-                  <Button asChild variant="outline" size="sm">
+                  ))}
+                  {result.currentPage < result.totalPages && (
                     <Link
                       href={buildFilterHref({ page: result.currentPage + 1 })}
+                      className="gloss-silver px-3 py-1 text-[12px] font-bold"
+                      style={{ textDecoration: "none" }}
                     >
-                      Berikutnya →
+                      Next &raquo;
                     </Link>
-                  </Button>
-                )}
-              </div>
-            </nav>
-          )}
-        </>
-      )}
-    </main>
+                  )}
+                </div>
+              </nav>
+            )}
+          </>
+        )}
+      </main>
+    </div>
   );
 }

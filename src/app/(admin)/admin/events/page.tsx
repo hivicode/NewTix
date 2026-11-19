@@ -46,10 +46,10 @@ export default async function AdminEventsListPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-2 border-ink pb-6">
         <div>
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-denim block">
+          <span className="text-xs font-bold text-denim block">
             MANAJEMEN KATALOG // NEWTIX
           </span>
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">
             Daftar Seluruh{" "}
             <span className="font-serif italic font-semibold text-denim">
               Acara.
@@ -68,7 +68,7 @@ export default async function AdminEventsListPage() {
       <div className="rounded-xl border-2 border-ink bg-card poster-shadow overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b-2 border-ink bg-cloud-subtle font-mono text-xs uppercase tracking-wider text-ink">
+            <tr className="border-b-2 border-ink bg-cloud-subtle text-xs text-ink">
               <th className="p-4">Acara & Lokasi</th>
               <th className="p-4">Jadwal</th>
               <th className="p-4">Status</th>
@@ -92,18 +92,18 @@ export default async function AdminEventsListPage() {
                   className="hover:bg-cloud-subtle/50 transition-colors"
                 >
                   <td className="p-4">
-                    <div className="font-mono text-[11px] text-denim font-bold uppercase">
+                    <div className="text-[11px] text-denim font-bold">
                       {ev.categories?.emoji} {ev.categories?.name || "Acara"}
                     </div>
-                    <div className="font-display text-base font-extrabold text-ink">
+                    <div className="font-display text-base font-semibold text-ink">
                       {ev.title}
                     </div>
-                    <div className="font-mono text-xs text-ink-muted">
+                    <div className="text-xs text-ink-muted">
                       {ev.venue}, {ev.city}
                     </div>
                   </td>
 
-                  <td className="p-4 font-mono text-xs whitespace-nowrap">
+                  <td className="p-4 text-xs whitespace-nowrap">
                     {formatEventDate(ev.starts_at)}
                   </td>
 
@@ -143,7 +143,7 @@ export default async function AdminEventsListPage() {
                     </div>
                   </td>
 
-                  <td className="p-4 font-mono text-xs whitespace-nowrap">
+                  <td className="p-4 text-xs whitespace-nowrap">
                     <span className="font-bold text-ink">{sold}</span> /{" "}
                     {totalQuota} tiket
                     <span className="block text-[11px] text-ink-muted">
