@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   createClient,
@@ -28,7 +28,7 @@ export async function purchaseTicketsAction(
 ): Promise<PurchaseActionState> {
   const raw = {
     ticketTypeId: String(formData.get("ticketTypeId") || ""),
-    qty: formData.get("qty"),
+    qty: formData.get("qty") ?? formData.get("quantity"),
     eventSlug: String(formData.get("eventSlug") || ""),
   };
 
@@ -98,6 +98,7 @@ export async function purchaseTicketsAction(
     total_amount: number;
   };
 
+  revalidateTag("events", "max");
   revalidatePath(`/events/${parsed.data.eventSlug}`);
   revalidatePath("/my-tickets");
   revalidatePath("/admin");

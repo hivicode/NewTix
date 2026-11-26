@@ -179,7 +179,7 @@ export function TicketPurchaseWidget({
         <input type="hidden" name="eventId" value={eventId} />
         <input type="hidden" name="eventSlug" value={eventSlug} />
         <input type="hidden" name="ticketTypeId" value={selectedId} />
-        <input type="hidden" name="quantity" value={qty} />
+        <input type="hidden" name="qty" value={qty} />
 
         {!allSoldOut && selectedTicket && selectedTicket.remaining > 0 && (
           <div className="mb-4 flex items-center justify-between border-y border-[#d8eaf6] py-3 text-[12px]">
