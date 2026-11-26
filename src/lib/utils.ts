@@ -60,3 +60,20 @@ export function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+export function normalizeImageUrl(rawUrl: string): string {
+  const url = rawUrl.trim();
+  if (!url) return "";
+
+  // Auto-convert Google Drive share links to direct image URLs
+  const fileMatch = url.match(/drive\.google\.com\/file\/d\/([^/?#]+)/i);
+  if (fileMatch?.[1]) {
+    return `https://lh3.googleusercontent.com/d/${fileMatch[1]}`;
+  }
+  const idMatch = url.match(/drive\.google\.com\/(?:open|uc)\?.*[?&]?id=([^&#]+)/i);
+  if (idMatch?.[1]) {
+    return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+  }
+
+  return url;
+}
+

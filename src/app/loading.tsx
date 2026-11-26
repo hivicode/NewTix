@@ -1,15 +1,11 @@
 export default function GlobalLoading() {
   return (
-    <div className="kk">
-      <div className="kk-loading" role="status" aria-live="polite">
-        <div className="win">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="spin-pin" src="/newtix/home/5_Map/Pin1.png" alt="" />
-          <p className="win-title">Loading your tickets...</p>
-          <p className="win-sub">Please wait, the gate never closes.</p>
-          <div className="bar" />
-        </div>
-      </div>
+    <div
+      role="status"
+      aria-live="polite"
+      className="fixed top-0 left-0 right-0 z-[9999] h-[3px] overflow-hidden bg-[#edf9ff]"
+    >
+      <div className="h-full w-1/3 bg-gradient-to-r from-[#2867a6] via-[#ff8a09] to-[#2867a6] animate-[kk-bar_1s_ease-in-out_infinite] relative" />
     </div>
   );
 }

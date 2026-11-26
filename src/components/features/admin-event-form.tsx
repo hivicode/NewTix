@@ -186,7 +186,7 @@ export function AdminEventForm({
 
             <div className="space-y-1.5 md:col-span-2">
               <Label htmlFor="cover_url">
-                URL Gambar Poster (Unsplash / Supabase)
+                URL Gambar Poster (Semua Link: Google Drive, Discord, Unsplash, dll.)
               </Label>
               <RetroInput
                 id="cover_url"
@@ -197,7 +197,7 @@ export function AdminEventForm({
                   event?.cover_url ||
                   "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80"
                 }
-                placeholder="https://images.unsplash.com/..."
+                placeholder="https://drive.google.com/file/d/... atau https://cdn.discordapp.com/..."
               />
             </div>
 

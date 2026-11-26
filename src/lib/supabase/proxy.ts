@@ -11,6 +11,19 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
+  const pathname = request.nextUrl.pathname;
+  const isProtectedRoute =
+    pathname.startsWith("/my-tickets") || pathname.startsWith("/admin");
+
+  // Skip network round-trip to Supabase Auth on public routes when no session cookie exists
+  const hasAuthCookie = request.cookies
+    .getAll()
+    .some((c) => c.name.startsWith("sb-") && c.name.includes("auth-token"));
+
+  if (!hasAuthCookie && !isProtectedRoute) {
+    return supabaseResponse;
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -43,8 +56,6 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const pathname = request.nextUrl.pathname;
 
   // Protected member routes: /my-tickets/*
   if (pathname.startsWith("/my-tickets") && !user) {

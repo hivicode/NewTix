@@ -1,3 +1,6 @@
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
+import { createClient as createPublicSupabaseClient } from "@supabase/supabase-js";
 import {
   createClient,
   isServerSupabaseConfigured,
@@ -5,10 +8,17 @@ import {
 import { FALLBACK_CATEGORIES, FALLBACK_EVENTS } from "@/lib/fallback-data";
 import type { Category, EventItem, Profile } from "@/types/database";
 
-export async function getCurrentUserAndProfile(): Promise<{
+function getPublicClient() {
+  return createPublicSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
+export const getCurrentUserAndProfile = cache(async (): Promise<{
   user: { id: string; email?: string } | null;
   profile: Profile | null;
-}> {
+}> => {
   if (!isServerSupabaseConfigured()) {
     return { user: null, profile: null };
   }
@@ -34,15 +44,11 @@ export async function getCurrentUserAndProfile(): Promise<{
   } catch {
     return { user: null, profile: null };
   }
-}
+});
 
-export async function getCategories(): Promise<Category[]> {
-  if (!isServerSupabaseConfigured()) {
-    return FALLBACK_CATEGORIES;
-  }
-
-  try {
-    const supabase = await createClient();
+const fetchCachedCategories = unstable_cache(
+  async (): Promise<Category[]> => {
+    const supabase = getPublicClient();
     const { data, error } = await supabase
       .from("categories")
       .select("*")
@@ -52,10 +58,43 @@ export async function getCategories(): Promise<Category[]> {
       return FALLBACK_CATEGORIES;
     }
     return data as Category[];
+  },
+  ["public-categories"],
+  { revalidate: 60, tags: ["categories"] }
+);
+
+export async function getCategories(): Promise<Category[]> {
+  if (!isServerSupabaseConfigured()) {
+    return FALLBACK_CATEGORIES;
+  }
+
+  try {
+    return await fetchCachedCategories();
   } catch {
     return FALLBACK_CATEGORIES;
   }
 }
+
+const fetchCachedFeaturedEvents = unstable_cache(
+  async (limit: number): Promise<EventItem[]> => {
+    const supabase = getPublicClient();
+    const { data, error } = await supabase
+      .from("events")
+      .select("*, categories(*), ticket_types(*)")
+      .in("status", ["published", "ended"])
+      .order("starts_at", { ascending: false })
+      .limit(limit);
+
+    if (error || !data || data.length === 0) {
+      const published = FALLBACK_EVENTS.filter((e) => e.status === "published");
+      const ended = FALLBACK_EVENTS.filter((e) => e.status === "ended");
+      return [...published, ...ended].slice(0, limit);
+    }
+    return data as EventItem[];
+  },
+  ["public-featured-events"],
+  { revalidate: 30, tags: ["events"] }
+);
 
 export async function getFeaturedEvents(limit = 6): Promise<EventItem[]> {
   const getFallbackFeatured = () => {
@@ -69,18 +108,7 @@ export async function getFeaturedEvents(limit = 6): Promise<EventItem[]> {
   }
 
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("events")
-      .select("*, categories(*), ticket_types(*)")
-      .in("status", ["published", "ended"])
-      .order("starts_at", { ascending: false })
-      .limit(limit);
-
-    if (error || !data || data.length === 0) {
-      return getFallbackFeatured();
-    }
-    return data as EventItem[];
+    return await fetchCachedFeaturedEvents(limit);
   } catch {
     return getFallbackFeatured();
   }

@@ -1,13 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   createClient,
   isServerSupabaseConfigured,
 } from "@/lib/supabase/server";
-import { slugify } from "@/lib/utils";
+import { normalizeImageUrl, slugify } from "@/lib/utils";
 
 export interface AdminActionState {
   error?: string;
@@ -128,7 +128,7 @@ export async function createEventAction(
         city: parsed.data.city,
         starts_at: new Date(parsed.data.starts_at).toISOString(),
         ends_at: new Date(parsed.data.ends_at).toISOString(),
-        cover_url: parsed.data.cover_url || null,
+        cover_url: normalizeImageUrl(parsed.data.cover_url) || null,
         description: parsed.data.description,
         status: parsed.data.status,
       })
@@ -162,6 +162,7 @@ export async function createEventAction(
       });
     }
 
+    revalidateTag("events", "max");
     revalidatePath("/");
     revalidatePath("/events");
     revalidatePath("/admin");
@@ -221,7 +222,7 @@ export async function updateEventAction(
         city: parsed.data.city,
         starts_at: new Date(parsed.data.starts_at).toISOString(),
         ends_at: new Date(parsed.data.ends_at).toISOString(),
-        cover_url: parsed.data.cover_url || null,
+        cover_url: normalizeImageUrl(parsed.data.cover_url) || null,
         description: parsed.data.description,
         status: parsed.data.status,
       })
@@ -231,6 +232,7 @@ export async function updateEventAction(
       return { error: `Gagal memperbarui acara: ${error.message}` };
     }
 
+    revalidateTag("events", "max");
     revalidatePath("/");
     revalidatePath("/events");
     revalidatePath(`/events/${finalSlug}`);
