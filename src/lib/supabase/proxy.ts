@@ -15,12 +15,8 @@ export async function updateSession(request: NextRequest) {
   const isProtectedRoute =
     pathname.startsWith("/my-tickets") || pathname.startsWith("/admin");
 
-  // Skip network round-trip to Supabase Auth on public routes when no session cookie exists
-  const hasAuthCookie = request.cookies
-    .getAll()
-    .some((c) => c.name.startsWith("sb-") && c.name.includes("auth-token"));
-
-  if (!hasAuthCookie && !isProtectedRoute) {
+  // Only hit Supabase Auth in middleware for protected routes; public routes stay instant
+  if (!isProtectedRoute) {
     return supabaseResponse;
   }
 

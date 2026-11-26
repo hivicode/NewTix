@@ -15,6 +15,20 @@ function getPublicClient() {
   );
 }
 
+const fetchCachedProfile = unstable_cache(
+  async (userId: string): Promise<Profile | null> => {
+    const supabase = getPublicClient();
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+    return (data as Profile) || null;
+  },
+  ["user-profile"],
+  { revalidate: 60, tags: ["profiles"] }
+);
+
 export const getCurrentUserAndProfile = cache(async (): Promise<{
   user: { id: string; email?: string } | null;
   profile: Profile | null;
@@ -25,21 +39,19 @@ export const getCurrentUserAndProfile = cache(async (): Promise<{
 
   try {
     const supabase = await createClient();
+    // Fast local JWT read from cookie (0ms) for layout/UI; mutations still use getUser()
     const {
-      data: { user },
-    } = await supabase.auth.getUser();
+      data: { session },
+    } = await supabase.auth.getSession();
 
+    const user = session?.user;
     if (!user) return { user: null, profile: null };
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
+    const profile = await fetchCachedProfile(user.id);
 
     return {
       user: { id: user.id, email: user.email },
-      profile: (profile as Profile) || null,
+      profile,
     };
   } catch {
     return { user: null, profile: null };
@@ -254,13 +266,9 @@ export async function getFilteredEvents(params: {
   }
 }
 
-export async function getEventBySlug(slug: string): Promise<EventItem | null> {
-  if (!isServerSupabaseConfigured()) {
-    return FALLBACK_EVENTS.find((ev) => ev.slug === slug) || null;
-  }
-
-  try {
-    const supabase = await createClient();
+const fetchCachedEventBySlug = unstable_cache(
+  async (slug: string): Promise<EventItem | null> => {
+    const supabase = getPublicClient();
     const { data, error } = await supabase
       .from("events")
       .select("*, categories(*), ticket_types(*)")
@@ -271,6 +279,18 @@ export async function getEventBySlug(slug: string): Promise<EventItem | null> {
       return FALLBACK_EVENTS.find((ev) => ev.slug === slug) || null;
     }
     return data as EventItem;
+  },
+  ["public-event-by-slug"],
+  { revalidate: 30, tags: ["events"] }
+);
+
+export async function getEventBySlug(slug: string): Promise<EventItem | null> {
+  if (!isServerSupabaseConfigured()) {
+    return FALLBACK_EVENTS.find((ev) => ev.slug === slug) || null;
+  }
+
+  try {
+    return await fetchCachedEventBySlug(slug);
   } catch {
     return FALLBACK_EVENTS.find((ev) => ev.slug === slug) || null;
   }
