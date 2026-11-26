@@ -10,6 +10,12 @@ import {
   formatRupiah,
   cn,
 } from "@/lib/utils";
+import { StatusBadge } from "@/components/atoms";
+import {
+  RetroPanel,
+  RetroPanelBody,
+  RetroPanelHeader,
+} from "@/components/molecules/retro-panel";
 
 export interface LiveOrderFeedItem {
   id: string;
@@ -87,82 +93,76 @@ export function AdminLiveOrdersFeed({
   }, []);
 
   return (
-    <div className="rounded-xl border-2 border-ink bg-card p-5 sm:p-6 poster-shadow">
-      <div className="flex items-center justify-between border-b-2 border-dashed border-ink/25 pb-4 mb-4">
-        <div className="flex items-center gap-2.5">
-          <ReceiptText className="w-5 h-5 text-denim" />
-          <div>
-            <h2 className="font-display text-xl font-semibold tracking-tight">
-              Pembelian Terbaru (Live)
-            </h2>
-            <p className="text-[11px] text-ink-muted">
-              Menerima sinyal INSERT langsung dari tabel orders
-            </p>
-          </div>
-        </div>
-
-        <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-2.5 py-1 bg-butter text-[#14121F] text-[10px] font-bold">
+    <RetroPanel>
+      <RetroPanelHeader>
+        <span className="inline-flex items-center gap-2">
+          <ReceiptText className="w-4 h-4 text-[#2867a6]" />
+          PEMBELIAN TERBARU (LIVE)
+        </span>
+        <StatusBadge $tone={connected ? "valid" : "info"}>
           <Radio
             className={cn(
               "w-3 h-3",
-              connected ? "text-denim animate-pulse" : "text-[#14121F]"
+              connected ? "animate-pulse" : ""
             )}
           />
           {connected ? "REALTIME AKTIF" : "STANDBY"}
-        </span>
-      </div>
+        </StatusBadge>
+      </RetroPanelHeader>
 
-      {orders.length === 0 ? (
-        <div className="py-10 text-center text-xs text-ink-muted">
-          Belum ada transaksi masuk. Begitu ada pembeli, baris baru akan muncul
-          otomatis di sini tanpa reload.
-        </div>
-      ) : (
-        <div className="space-y-2.5">
-          <AnimatePresence initial={false}>
-            {orders.map((ord) => (
-              <motion.div
-                key={ord.id}
-                initial={
-                  prefersReducedMotion
-                    ? false
-                    : { opacity: 0, y: -14, scale: 0.98 }
-                }
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: "spring", stiffness: 320, damping: 24 }}
-                className="rounded-lg border-2 border-ink bg-background p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
-              >
-                <div>
-                  <div className="flex items-center gap-2 text-[11px] text-ink-muted">
-                    <span className="font-bold text-ink">
-                      #{ord.id.slice(0, 8).toUpperCase()}
-                    </span>
-                    <span>•</span>
-                    <span>{ord.buyer_name || "Member"}</span>
-                    <span>•</span>
-                    <span>
-                      {formatEventDate(ord.created_at)}{" "}
-                      {formatEventTime(ord.created_at)}
+      <RetroPanelBody>
+        {orders.length === 0 ? (
+          <div className="py-10 text-center text-xs text-[#5a5a5a]">
+            Belum ada transaksi masuk. Begitu ada pembeli, baris baru akan muncul
+            otomatis di sini tanpa reload.
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            <AnimatePresence initial={false}>
+              {orders.map((ord) => (
+                <motion.div
+                  key={ord.id}
+                  initial={
+                    prefersReducedMotion
+                      ? false
+                      : { opacity: 0, y: -14, scale: 0.98 }
+                  }
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 24 }}
+                  className="border border-[#d8eaf6] bg-[#f8fbfe] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-[#e7f1fb] transition-colors"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 text-[11px] text-[#5a5a5a]">
+                      <span className="font-bold text-black">
+                        #{ord.id.slice(0, 8).toUpperCase()}
+                      </span>
+                      <span>•</span>
+                      <span>{ord.buyer_name || "Member"}</span>
+                      <span>•</span>
+                      <span>
+                        {formatEventDate(ord.created_at)}{" "}
+                        {formatEventTime(ord.created_at)}
+                      </span>
+                    </div>
+                    <p className="text-sm font-bold text-black mt-0.5">
+                      {ord.event_title || "Pembelian Tiket"}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 self-end sm:self-center">
+                    <StatusBadge $tone="valid">
+                      {ord.status.toUpperCase()}
+                    </StatusBadge>
+                    <span className="text-sm font-bold text-[#2867a6]">
+                      {formatRupiah(ord.total_amount)}
                     </span>
                   </div>
-                  <p className="font-display text-sm font-semibold text-ink mt-0.5">
-                    {ord.event_title || "Pembelian Tiket"}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-3 self-end sm:self-center">
-                  <span className="rounded-full bg-mint text-[#14121F] text-[10px] font-bold px-2 py-0.5 border border-ink">
-                    {ord.status}
-                  </span>
-                  <span className="text-sm font-semibold text-denim">
-                    {formatRupiah(ord.total_amount)}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      )}
-    </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+      </RetroPanelBody>
+    </RetroPanel>
   );
 }

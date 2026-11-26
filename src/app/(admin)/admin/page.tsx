@@ -12,7 +12,13 @@ import {
   isServerSupabaseConfigured,
 } from "@/lib/supabase/server";
 import { FALLBACK_EVENTS } from "@/lib/fallback-data";
-import { Button } from "@/components/ui/button";
+import { GlossLink, StatusBadge } from "@/components/atoms";
+import {
+  RetroPanel,
+  RetroPanelBody,
+  RetroPanelHeader,
+  RetroStatCard,
+} from "@/components/molecules/retro-panel";
 import {
   AdminLiveOrdersFeed,
   type LiveOrderFeedItem,
@@ -110,122 +116,117 @@ export default async function AdminDashboardPage() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-7">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-2 border-ink pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#d9d9d9] pb-5">
         <div>
-          <span className="text-xs font-bold text-denim block">
+          <span className="text-[11px] font-bold tracking-wider text-[#2867a6] block">
             PUSAT KENDALI // NEWTIX
           </span>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-1">
-            Ringkasan Tiket &{" "}
-            <span className="font-serif italic font-semibold text-denim">
-              Pantauan Live.
-            </span>
+          <h1 className="text-[26px] sm:text-[30px] font-bold tracking-tight text-black mt-1">
+            Ringkasan Tiket &amp;{" "}
+            <span className="text-[#2867a6]">Pantauan Live</span>
           </h1>
         </div>
 
-        <Button asChild>
-          <Link href="/admin/events/new">
-            <Plus className="w-4 h-4" />
-            Buat Acara Baru
-          </Link>
-        </Button>
+        <GlossLink href="/admin/events/new" $variant="orange" $size="md">
+          <Plus className="w-4 h-4" />
+          Buat Acara Baru
+        </GlossLink>
       </div>
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
-          <div className="flex items-center justify-between text-ink-muted mb-3">
-            <span className="text-xs font-bold">
+        <RetroStatCard>
+          <div className="flex items-center justify-between text-[#5a5a5a] mb-2.5">
+            <span className="text-[11px] font-bold tracking-wide">
               TOTAL ACARA
             </span>
-            <Calendar className="w-4 h-4 text-denim" />
+            <Calendar className="w-4 h-4 text-[#2867a6]" />
           </div>
-          <span className="text-4xl font-semibold text-ink block">
+          <span className="text-3xl sm:text-4xl font-bold text-black block">
             {events.length}
           </span>
-          <span className="text-xs text-ink-muted mt-1 block">
+          <span className="text-xs text-[#5a5a5a] mt-1.5 block">
             {events.filter((e) => e.status === "published").length} acara sedang
             tayang
           </span>
-        </div>
+        </RetroStatCard>
 
-        <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
-          <div className="flex items-center justify-between text-ink-muted mb-3">
-            <span className="text-xs font-bold">
+        <RetroStatCard>
+          <div className="flex items-center justify-between text-[#5a5a5a] mb-2.5">
+            <span className="text-[11px] font-bold tracking-wide">
               TIKET TERJUAL
             </span>
-            <TicketIcon className="w-4 h-4 text-denim" />
+            <TicketIcon className="w-4 h-4 text-[#2867a6]" />
           </div>
-          <span className="text-4xl font-semibold text-denim block">
+          <span className="text-3xl sm:text-4xl font-bold text-[#2867a6] block">
             {totalTicketsSold.toLocaleString("id-ID")}
           </span>
-          <span className="text-xs text-ink-muted mt-1 block">
+          <span className="text-xs text-[#5a5a5a] mt-1.5 block">
             Akumulasi seluruh gelombang tiket
           </span>
-        </div>
+        </RetroStatCard>
 
-        <div className="rounded-xl border-2 border-ink bg-card p-5 poster-shadow">
-          <div className="flex items-center justify-between text-ink-muted mb-3">
-            <span className="text-xs font-bold">
+        <RetroStatCard>
+          <div className="flex items-center justify-between text-[#5a5a5a] mb-2.5">
+            <span className="text-[11px] font-bold tracking-wide">
               TOTAL PENDAPATAN
             </span>
-            <Coins className="w-4 h-4 text-denim" />
+            <Coins className="w-4 h-4 text-[#2867a6]" />
           </div>
-          <span className="text-3xl sm:text-4xl font-semibold text-ink block">
+          <span className="text-2xl sm:text-3xl font-bold text-black block">
             {formatRupiah(totalOrdersRevenue)}
           </span>
-          <span className="inline-block rounded-full bg-mint text-[#14121F] border border-ink px-2 py-0.5 text-[10px] mt-1 font-bold">
-            100% Transaksi Lunas
-          </span>
-        </div>
+          <div className="mt-2">
+            <StatusBadge $tone="valid">100% TRANSAKSI LUNAS</StatusBadge>
+          </div>
+        </RetroStatCard>
       </div>
 
       {/* Chart + Live Orders Feed */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-7 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
         {/* Left 6 cols: Simple Occupancy Bar Chart */}
-        <div className="xl:col-span-6 rounded-xl border-2 border-ink bg-card p-5 sm:p-6 poster-shadow">
-          <div className="flex items-center justify-between border-b-2 border-dashed border-ink/25 pb-4 mb-5">
-            <div className="flex items-center gap-2.5">
-              <TrendingUp className="w-5 h-5 text-denim" />
-              <div>
-                <h2 className="font-display text-xl font-semibold tracking-tight">
-                  Tingkat Keterisian Kuota Acara
-                </h2>
-                <p className="text-[11px] text-ink-muted">
-                  Perbandingan tiket terjual terhadap kapasitas kuota
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {chartRows.map((row) => (
-              <div key={row.id} className="space-y-1.5">
-                <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="font-bold text-ink truncate">
-                    {row.title}{" "}
-                    <span className="text-ink-muted font-normal">
-                      ({row.city})
+        <RetroPanel className="xl:col-span-6">
+          <RetroPanelHeader>
+            <span className="inline-flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-[#2867a6]" />
+              TINGKAT KETERISIAN KUOTA ACARA
+            </span>
+            <span className="text-[11px] font-semibold text-[#5a5a5a]">
+              Top {chartRows.length} Acara
+            </span>
+          </RetroPanelHeader>
+          <RetroPanelBody>
+            <div className="space-y-4">
+              {chartRows.map((row) => (
+                <div key={row.id} className="space-y-1.5">
+                  <div className="flex items-center justify-between gap-2 text-xs">
+                    <span className="font-bold text-black truncate">
+                      {row.title}{" "}
+                      <span className="text-[#5a5a5a] font-normal">
+                        ({row.city})
+                      </span>
                     </span>
-                  </span>
-                  <span className="font-bold text-ink shrink-0">
-                    {row.sold}/{row.quota} ({row.pct}%)
-                  </span>
+                    <span className="font-bold text-[#2867a6] shrink-0">
+                      {row.sold}/{row.quota} ({row.pct}%)
+                    </span>
+                  </div>
+                  <div className="w-full h-3.5 border border-[#c1c1c1] bg-[#f4f4f4] shadow-[inset_0_0_4px_rgba(0,0,0,0.12)] overflow-hidden">
+                    <div
+                      style={{ width: `${Math.min(100, row.pct)}%` }}
+                      className={`h-full transition-all ${
+                        row.pct >= 85
+                          ? "bg-gradient-to-r from-[#ffb84d] to-[#ff8a09]"
+                          : "bg-gradient-to-r from-[#5899d6] to-[#2867a6]"
+                      }`}
+                    />
+                  </div>
                 </div>
-                <div className="w-full h-4 rounded-full border-2 border-ink bg-cloud-subtle overflow-hidden">
-                  <div
-                    style={{ width: `${Math.min(100, row.pct)}%` }}
-                    className={`h-full transition-all ${
-                      row.pct >= 85 ? "bg-bubblegum" : "bg-denim"
-                    }`}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </RetroPanelBody>
+        </RetroPanel>
 
         {/* Right 6 cols: Live Orders Feed (Supabase Realtime INSERT) */}
         <div className="xl:col-span-6">
